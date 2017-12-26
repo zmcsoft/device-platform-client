@@ -80,12 +80,15 @@ public class MainWindow extends Application {
             log.error(event.getMessage(), event);
         });
         //engine.loadContent("<h1 style=\"font-family: 'YaHei Consolas Hybrid'\">abcABC1234测试</h1>");
-        engine.load("file:/home/zhouhao/apsp-client/ui/index.html");
+        engine.load(new File("./ui/index.html").toURI().toString());
         root.getChildren().add(webView);
-        primaryStage.show();
+
         primaryStage.setOnCloseRequest(event -> {
             cameraOperation.close();
+            Global.executorService.shutdownNow();
         });
+        primaryStage.show();
+        root.setVisible(true);
         // primaryStage.setFullScreen(true);
     }
 

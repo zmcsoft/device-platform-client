@@ -15,23 +15,38 @@
 
 <button onclick="camera.open()">打开摄像头</button>
 
-<button onclick="camera.close()">关闭摄像头</button>
+<button onclick="camera.close();window.clearInterval(t);t=null">关闭摄像头</button>
 
-<button onclick="getCameraImage()">获取摄像头图片</button>
-<img id="cameraImg" src="http://www.baidu.com/img/superlogo_c4d7df0a003d3db9b65e9ef0fe6da1ec.png" alt="到百度首页" title="到百度首页">
+<button onclick="getCameraImage()">拍照</button>
+
+<button onclick="openCamera()">实时抓取照片</button>
+
+<img id="cameraImg" />
 
 <span id="inp"></span>
 </body>
 </html>
 <script type="text/javascript">
-    var base64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJAQMAAADaX5RTAAAAA3NCSVQICAjb4U/gAAAABlBMVEX///+ZmZmOUEqyAAAAAnRSTlMA/1uRIrUAAAAJcEhZcwAACusAAArrAYKLDVoAAAAWdEVYdENyZWF0aW9uIFRpbWUAMDkvMjAvMTIGkKG+AAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAAB1JREFUCJljONjA8LiBoZyBwY6BQQZMAtlAkYMNAF1fBs/zPvcnAAAAAElFTkSuQmCC";
-    document.getElementById("cameraImg").src = base64;
+
+    var t;
 
     function getCameraImage() {
-        window.setInterval(function () {
-            var base64 = camera.getImageBase64();
-            document.getElementById("cameraImg").src = "data:image/png;base64," + base64;
-        }, 100)
+        if(!camera.isOpen()){
+            camera.open();
+        }
+        console.log(1);
+        var base64 = camera.getImageBase64();
+        if (!base64) return;
+        console.log(base64);
+
+        document.getElementById("cameraImg").src = "data:image/png;base64," + base64;
+    }
+    function getLiveCameraImage() {
+        if (t) return;
+        if(!camera.isOpen()){
+            camera.open();
+        }
+        t=window.setInterval(getCameraImage, 100)
     }
 
     function doPrint() {
@@ -55,35 +70,9 @@
     }
 
     function openCamera() {
-        camera.show(20, 100, 200, 200);
+        camera.show(100, 100, 400, 400);
 
     }
 
 
-    function load (){
-        document.addEventListener('touchstart',touch, false);
-        document.addEventListener('touchmove',touch, false);
-        document.addEventListener('touchend',touch, false);
-
-        function touch (event){
-            var event = event || window.event;
-
-            var oInp = document.getElementById("inp");
-
-            switch(event.type){
-                case "touchstart":
-                    oInp.innerHTML = "Touch started (" + event.touches[0].clientX + "," + event.touches[0].clientY + ")";
-                    break;
-                case "touchend":
-                    oInp.innerHTML = "<br>Touch end (" + event.changedTouches[0].clientX + "," + event.changedTouches[0].clientY + ")";
-                    break;
-                case "touchmove":
-                    event.preventDefault();
-                    oInp.innerHTML = "<br>Touch moved (" + event.touches[0].clientX + "," + event.touches[0].clientY + ")";
-                    break;
-            }
-
-        }
-    }
-    window.addEventListener('load',load, false);
 </script>
