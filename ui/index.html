@@ -19,6 +19,8 @@
 
 <button onclick="getCameraImage()">获取摄像头图片</button>
 <img id="cameraImg" src="http://www.baidu.com/img/superlogo_c4d7df0a003d3db9b65e9ef0fe6da1ec.png" alt="到百度首页" title="到百度首页">
+
+<span id="inp"></span>
 </body>
 </html>
 <script type="text/javascript">
@@ -56,4 +58,32 @@
         camera.show(20, 100, 200, 200);
 
     }
+
+
+    function load (){
+        document.addEventListener('touchstart',touch, false);
+        document.addEventListener('touchmove',touch, false);
+        document.addEventListener('touchend',touch, false);
+
+        function touch (event){
+            var event = event || window.event;
+
+            var oInp = document.getElementById("inp");
+
+            switch(event.type){
+                case "touchstart":
+                    oInp.innerHTML = "Touch started (" + event.touches[0].clientX + "," + event.touches[0].clientY + ")";
+                    break;
+                case "touchend":
+                    oInp.innerHTML = "<br>Touch end (" + event.changedTouches[0].clientX + "," + event.changedTouches[0].clientY + ")";
+                    break;
+                case "touchmove":
+                    event.preventDefault();
+                    oInp.innerHTML = "<br>Touch moved (" + event.touches[0].clientX + "," + event.touches[0].clientY + ")";
+                    break;
+            }
+
+        }
+    }
+    window.addEventListener('load',load, false);
 </script>

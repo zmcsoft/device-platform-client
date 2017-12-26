@@ -1,3 +1,13 @@
 app:
   title: APSP
 debug: false
+
+# 开启本地服务,可通过http调用设备信息
+#local:
+#  server:
+#    port: 8012
+#
+server:
+  base-path: http://localhost:8011/
+  upgrade:
+    enable: true

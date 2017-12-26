@@ -9,6 +9,7 @@ import com.zmcsoft.apsp.client.javascript.Console;
 import com.zmcsoft.apsp.client.javascript.drivers.PrintDriver;
 import javafx.application.Application;
 import javafx.concurrent.Worker;
+import javafx.event.EventType;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -56,6 +57,7 @@ public class MainWindow extends Application {
         WebView webView = new WebView();
         webView.setFontSmoothingType(FontSmoothingType.LCD);
         CameraOperation cameraOperation = new CameraOperation(root);
+        webView.setOnTouchPressed(event -> System.out.println(event));
 
         final WebEngine engine = webView.getEngine();
         engine.setUserDataDirectory(new File("./data/browser"));
