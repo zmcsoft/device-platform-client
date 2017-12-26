@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <title>测试</title>
+    <style rel="stylesheet" type="text/css">
+        * {
+            font-family: 'YaHei Consolas Hybrid';
+        }
+    </style>
+</head>
+<body>
+<button onclick="doPrint()">打印</button>
+
+<button onclick="camera.open()">打开摄像头</button>
+
+<button onclick="camera.close()">关闭摄像头</button>
+
+<button onclick="getCameraImage()">获取摄像头图片</button>
+<img id="cameraImg" src="http://www.baidu.com/img/superlogo_c4d7df0a003d3db9b65e9ef0fe6da1ec.png" alt="到百度首页" title="到百度首页">
+</body>
+</html>
+<script type="text/javascript">
+    var base64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJAQMAAADaX5RTAAAAA3NCSVQICAjb4U/gAAAABlBMVEX///+ZmZmOUEqyAAAAAnRSTlMA/1uRIrUAAAAJcEhZcwAACusAAArrAYKLDVoAAAAWdEVYdENyZWF0aW9uIFRpbWUAMDkvMjAvMTIGkKG+AAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAAB1JREFUCJljONjA8LiBoZyBwY6BQQZMAtlAkYMNAF1fBs/zPvcnAAAAAElFTkSuQmCC";
+    document.getElementById("cameraImg").src = base64;
+
+    function getCameraImage() {
+        window.setInterval(function () {
+            var base64 = camera.getImageBase64();
+            document.getElementById("cameraImg").src = "data:image/png;base64," + base64;
+        }, 100)
+    }
+
+    function doPrint() {
+        var template = [
+            {"type": "text", "value": "${name}", "x": "100", "y": "200"}
+        ];
+        try {
+            var res = sqlExecutor.single("select * from system_info", "");
+            console.log(res);
+        } catch (e) {
+            console.error(e);
+        }
+        printer.print({
+            template: JSON.stringify(template),
+            data: JSON.stringify({name: "姓名"}),
+            callback: function (messge) {
+                window.console.log("打印:" + messge);
+                return true;
+            }
+        });
+    }
+
+    function openCamera() {
+        camera.show(20, 100, 200, 200);
+
+    }
+</script>

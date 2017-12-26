@@ -1,0 +1,15 @@
+2017-12-26 15:48:34 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "S_USER" not found; SQL statement:
+select * from s_user [42102-193]
+2017-12-26 15:48:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "S_USER" not found; SQL statement:
+select * from s_user [42102-193]
+2017-12-26 15:48:54 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "S_USER" not found; SQL statement:
+select * from s_user [42102-193]
+2017-12-26 15:49:51 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "S_USER" not found; SQL statement:
+select * from s_user [42102-193]
+2017-12-26 16:26:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "TEST" not found; SQL statement:
+select 1 from test [42102-193]
