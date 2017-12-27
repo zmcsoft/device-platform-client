@@ -9,7 +9,7 @@ import com.ochafik.lang.jnaerator.JNAerator;
 public class JNAeratorTests {
     public static void main(String[] args) {
         JNAerator.main(new String[]{
-                "./drivers/samcoins.dll", "-com", "-o", "target", "-mode", "Maven", "-runtime", "JNA"
+                "./drivers/card/K2616_Dll.dll","./drivers/card/K2616_Dll.h", "-o", "target", "-mode", "Directory", "-runtime", "JNA"
         });
     }
 }
