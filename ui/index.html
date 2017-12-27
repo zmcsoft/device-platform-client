@@ -13,7 +13,8 @@
 <body>
 <button onclick="doPrint()">打印</button>
 
-<button onclick="camera.open()">打开摄像头</button>
+<button onclick="camera.open(function(){})">打开摄像头
+</button>
 
 <button onclick="camera.close();window.clearInterval(t);t=null">关闭摄像头</button>
 
@@ -21,7 +22,7 @@
 
 <button onclick="openCamera()">实时抓取照片</button>
 
-<img id="cameraImg" />
+<img id="cameraImg"/>
 
 <span id="inp"></span>
 </body>
@@ -31,22 +32,26 @@
     var t;
 
     function getCameraImage() {
-        if(!camera.isOpen()){
-            camera.open();
+        function doGet() {
+            var base64 = camera.getImageBase64();
+            if (!base64) return;
+            console.log(base64);
+            document.getElementById("cameraImg").src = "data:image/png;base64," + base64;
         }
-        console.log(1);
-        var base64 = camera.getImageBase64();
-        if (!base64) return;
-        console.log(base64);
 
-        document.getElementById("cameraImg").src = "data:image/png;base64," + base64;
+        if (!camera.isOpen()) {
+            camera.open(doGet);
+            return;
+        }
+        doGet();
     }
+
     function getLiveCameraImage() {
         if (t) return;
-        if(!camera.isOpen()){
+        if (!camera.isOpen()) {
             camera.open();
         }
-        t=window.setInterval(getCameraImage, 100)
+        t = window.setInterval(getCameraImage, 100)
     }
 
     function doPrint() {
@@ -70,7 +75,7 @@
     }
 
     function openCamera() {
-        camera.show(100, 100, 400, 400);
+        camera.openRecord(100, 100, 400, 400);
 
     }
 

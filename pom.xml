@@ -6,7 +6,14 @@
 
     <groupId>com.zmcsoft.apsp</groupId>
     <artifactId>apsp-client</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>apsp-client-sdk</module>
+        <module>apsp-client-main</module>
+        <module>apsp-client-core</module>
+        <module>apsp-client-http</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
