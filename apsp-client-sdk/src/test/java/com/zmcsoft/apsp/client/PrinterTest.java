@@ -1,16 +1,25 @@
 package com.zmcsoft.apsp.client;
 
+import com.alibaba.fastjson.JSON;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.*;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.executor.DefaultPrintable;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.layer.LineLayer;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.layer.RectLayer;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.layer.TextLayer;
 
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
+import javax.print.*;
+import javax.print.attribute.Attribute;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.*;
+import javax.print.event.PrintJobAdapter;
+import javax.print.event.PrintJobAttributeEvent;
+import javax.print.event.PrintJobAttributeListener;
+import javax.print.event.PrintJobEvent;
 import java.awt.*;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +63,7 @@ public class PrinterTest {
             TextLayer textLayer = new TextLayer();
             textLayer.setX(x + 5);
             textLayer.setY(nowY + everyHeight / 2);
-            textLayer.setText("" + (rowIndex + 1));
+            textLayer.setText("abc中文：" + (rowIndex + 1));
             layers.add(textLayer);
         }
         {
@@ -81,13 +90,13 @@ public class PrinterTest {
         return layers;
     }
 
-    public static void main(String[] args) throws PrinterException {
+    public static void main(String[] args) throws PrinterException, PrintException, InterruptedException, IOException {
 
         TextLayer text = new TextLayer();
         text.setX(100);
         text.setY(100);
         text.setColor(Color.RED);
-        text.setFont(new Font("YaHei Consolas Hybrid", 1, 25));
+        text.setFont(new Font("YaHei Consolas Hybrid", Font.PLAIN, 25));
         text.setText("测试");
 
         LineLayer lineLayer = new LineLayer();
@@ -107,19 +116,79 @@ public class PrinterTest {
 
         DefaultPrintable defaultPrintable = new DefaultPrintable(command);
 
-        PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
+        //构建打印请求属性集
+        HashPrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 
+        //设置打印格式，因为未确定类型，所以选择autosense
+//        DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+        DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
+        //查找所有的可用的打印服务
+        PrintService printServices[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
+        for (PrintService printService : printServices) {
+            System.out.println(printService);
+        }
+        PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
+
+        PrintService printService = ServiceUI.printDialog(null, 200, 200, printServices,
+                defaultService, flavor, pras);
         //获取打印服务对象
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setJobName("test");
-        // 设置打印类
-        job.setPageable(defaultPrintable.getBook());
+        DocPrintJob job = printService.createPrintJob();
 
-        //可以用printDialog显示打印对话框，在用户确认后打印；也可以直接打印
-        boolean a = job.printDialog();
+        job.addPrintJobAttributeListener(System.out::println, null);
+        job.addPrintJobListener(new PrintJobAdapter() {
+            @Override
+            public void printDataTransferCompleted(PrintJobEvent pje) {
+                System.out.println("printDataTransferCompleted" + pje);
+            }
 
-        job.setPrintService(printService);
-        job.print();
+            @Override
+            public void printJobFailed(PrintJobEvent pje) {
+                System.out.println("printJobFailed" + pje);
+            }
+
+            @Override
+            public void printJobCompleted(PrintJobEvent pje) {
+                System.out.println("printJobCompleted" + pje);
+            }
+
+            @Override
+            public void printJobNoMoreEvents(PrintJobEvent pje) {
+                System.out.println("printJobNoMoreEvents" + pje);
+            }
+
+            @Override
+            public void printJobCanceled(PrintJobEvent pje) {
+                System.out.println("printJobCanceled" + pje);
+            }
+
+            @Override
+            public void printJobRequiresAttention(PrintJobEvent pje) {
+                System.out.println("printJobRequiresAttention" + pje);
+            }
+        });
+
+        pras.add(PrintQuality.HIGH);
+        pras.add(MediaSizeName.ISO_A4);
+
+        pras.add(new MediaPrintableArea(20, 20, Paper.A4.getWidth(), Paper.A4.getHeight(), MediaPrintableArea.MM));
+        Doc doc = new SimpleDoc(defaultPrintable, flavor, null);
+
+        new Thread(() -> {
+            for (int i = 0; i < 100; i++) {
+                System.out.println("--------------------------------");
+                for (Attribute attribute : printService.getAttributes().toArray()) {
+                    System.out.println(attribute.getName()+"\t\t"+attribute);
+                }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        Thread.sleep(1000);
+        job.print(doc, pras);
+        System.in.read();
     }
 
 

@@ -2,12 +2,16 @@ package com.zmcsoft.apsp.client.sdk.drivers.printer;
 
 /**
  * @author zhouhao
+ * @see MillimeterPaper
+ * @see PixelPaper
  * @since 1.0
  */
 public interface Paper {
     int getWidth();
 
     int getHeight();
+
+    /*以毫米定义的纸张*/
 
     MillimeterPaper A0  = new MillimeterPaper(841, 1189);
     MillimeterPaper B0  = new MillimeterPaper(1000, 1414);

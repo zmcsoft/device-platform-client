@@ -4,7 +4,7 @@ import java.awt.*;
 
 /**
  * @author zhouhao
- * @since 3.0
+ * @since 1.0
  */
 public interface Layer {
     void draw(Graphics2D graphics);

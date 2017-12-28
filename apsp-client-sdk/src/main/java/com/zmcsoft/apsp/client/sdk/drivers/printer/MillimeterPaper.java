@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 以毫米定义纸张大小
+ *
  * @author zhouhao
  * @since 1.0
  */
