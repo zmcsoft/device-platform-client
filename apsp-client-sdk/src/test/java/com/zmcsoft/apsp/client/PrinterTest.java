@@ -177,7 +177,7 @@ public class PrinterTest {
             for (int i = 0; i < 100; i++) {
                 System.out.println("--------------------------------");
                 for (Attribute attribute : printService.getAttributes().toArray()) {
-                    System.out.println(attribute.getName()+"\t\t"+attribute);
+                    System.out.println(attribute.getName() + "\t\t" + attribute);
                 }
                 try {
                     Thread.sleep(2000);

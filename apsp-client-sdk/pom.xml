@@ -29,6 +29,22 @@
             <artifactId>jacob</artifactId>
             <version>1.18</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.rxtx/rxtx -->
+        <dependency>
+            <groupId>org.rxtx</groupId>
+            <artifactId>rxtx</artifactId>
+            <version>2.1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.usb4java</groupId>
+            <artifactId>usb4java</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.usb4java</groupId>
+            <artifactId>usb4java-javax</artifactId>
+            <version>1.2.0</version>
+        </dependency>
         <dependency>
             <groupId>com.nativelibs4java</groupId>
             <artifactId>jnaerator</artifactId>
