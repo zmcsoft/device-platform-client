@@ -23,11 +23,11 @@
             <artifactId>apsp-client-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/net.sf.jacob-project/jacob -->
+        <!-- https://mvnrepository.com/artifact/com.hynnet/jacob -->
         <dependency>
-            <groupId>net.sf.jacob-project</groupId>
+            <groupId>com.hynnet</groupId>
             <artifactId>jacob</artifactId>
-            <version>1.14.3</version>
+            <version>1.18</version>
         </dependency>
         <dependency>
             <groupId>com.nativelibs4java</groupId>
