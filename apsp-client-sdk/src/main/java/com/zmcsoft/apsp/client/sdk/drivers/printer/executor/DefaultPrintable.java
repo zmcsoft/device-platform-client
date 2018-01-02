@@ -26,9 +26,9 @@ import java.util.List;
  */
 public class DefaultPrintable implements Printable {
 
-    private double width = 595;
+    private double width;
 
-    private double height = 842;
+    private double height;
 
     private PrintCommand printCommand;
 
@@ -42,7 +42,6 @@ public class DefaultPrintable implements Printable {
         this.printCommand = printCommand;
         this.width = printCommand.getPaper().getWidth();
         this.height = printCommand.getPaper().getHeight();
-
         noPrintPager = printCommand.getPagers().get(0);
     }
 
@@ -68,7 +67,7 @@ public class DefaultPrintable implements Printable {
         Paper paper = new Paper();
         //纸张大小
         paper.setSize(getWidth(), getHeight());
-        paper.setImageableArea(getXPadding(), getYPadding(), getWidth() , getHeight());
+        paper.setImageableArea(getXPadding(), getYPadding(), getWidth(), getHeight());
         return paper;
     }
 

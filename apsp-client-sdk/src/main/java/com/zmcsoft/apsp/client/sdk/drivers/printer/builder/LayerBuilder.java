@@ -9,7 +9,7 @@ import java.util.Map;
  * @since 1.0
  */
 public interface LayerBuilder {
-    boolean test(String type);
+    String getType();
 
     Layer build(Map<String, Object> config);
 }
