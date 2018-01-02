@@ -4,6 +4,7 @@ import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamDiscoveryEvent;
 import com.github.sarxos.webcam.WebcamDiscoveryListener;
 import com.zmcsoft.apsp.client.core.ApplicationConfig;
+import com.zmcsoft.apsp.client.core.Global;
 import com.zmcsoft.apsp.client.javascript.AbstractJavaScriptObject;
 import com.zmcsoft.apsp.client.sdk.drivers.camera.CameraDriver;
 import javafx.application.Platform;
@@ -27,27 +28,31 @@ public class CameraJavaScriptOperation extends AbstractJavaScriptObject {
     public CameraJavaScriptOperation(Pane pane) {
         this.pane = pane;
         this.view = new ImageView();
-        cameraDriver = new CameraDriver(getCamera());
-        Webcam.addDiscoveryListener(new WebcamDiscoveryListener() {
-            @Override
-            public void webcamFound(WebcamDiscoveryEvent webcamDiscoveryEvent) {
-                if (cameraDriver.getWebcam() != webcamDiscoveryEvent.getWebcam()) {
-                    stop();
-                    cameraDriver.setWebcam(webcamDiscoveryEvent.getWebcam());
-                }
-            }
-
-            @Override
-            public void webcamGone(WebcamDiscoveryEvent webcamDiscoveryEvent) {
-                if (cameraDriver.getWebcam() == webcamDiscoveryEvent.getWebcam()) {
-                    stop();
-                    Webcam webcam = getCamera();
-                    if (null != webcam) {
-                        cameraDriver.setWebcam(webcam);
+        Global.executorService.execute(()->{
+                cameraDriver = new CameraDriver(getCamera());
+                Webcam.addDiscoveryListener(new WebcamDiscoveryListener() {
+                    @Override
+                    public void webcamFound(WebcamDiscoveryEvent webcamDiscoveryEvent) {
+                        if (cameraDriver.getWebcam() != webcamDiscoveryEvent.getWebcam()) {
+                            stop();
+                            cameraDriver.setWebcam(webcamDiscoveryEvent.getWebcam());
+                        }
                     }
-                }
-            }
+
+                    @Override
+                    public void webcamGone(WebcamDiscoveryEvent webcamDiscoveryEvent) {
+                        if (cameraDriver.getWebcam() == webcamDiscoveryEvent.getWebcam()) {
+                            stop();
+                            Webcam webcam = getCamera();
+                            if (null != webcam) {
+                                cameraDriver.setWebcam(webcam);
+                            }
+                        }
+                    }
+                });
+
         });
+
     }
 
     private Webcam getCamera() {
