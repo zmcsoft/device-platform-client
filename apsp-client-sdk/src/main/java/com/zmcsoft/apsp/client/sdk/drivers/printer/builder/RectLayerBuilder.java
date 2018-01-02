@@ -17,8 +17,8 @@ public class RectLayerBuilder extends AbstractLayerBuilder {
     @Override
     protected Layer doBuild() {
         RectLayer layer = new RectLayer();
-        layer.setHeight(getInt("width", 100));
-        layer.setWidth(getInt("height", 100));
+        layer.setHeight(getInt("height", 100));
+        layer.setWidth(getInt("width", 100));
         layer.setY(getInt("y", 0));
         layer.setX(getInt("x", 0));
         layer.setColor(getColor(Color.BLACK));
