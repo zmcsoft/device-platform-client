@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.Layer;
 
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -43,7 +44,7 @@ public abstract class AbstractLayerBuilder implements LayerBuilder {
     }
 
     protected int getInt(String config, int def) {
-        return Integer.parseInt(getString(config, String.valueOf(def)));
+        return Math.round(new BigDecimal(getString(config, String.valueOf(def))).floatValue());
     }
 
     protected boolean getBoolean(String config, boolean def) {
