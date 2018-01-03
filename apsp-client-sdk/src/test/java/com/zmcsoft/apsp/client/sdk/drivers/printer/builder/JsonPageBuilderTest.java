@@ -26,7 +26,7 @@ import java.util.Arrays;
 public class JsonPageBuilderTest {
 
     public static void main(String[] args) throws PrintException {
-        String json = "{\"layers\":[{\"type\":\"rect\",\"x\":\"264\",\"y\":\"252\",\"width\":\"438\",\"height\":\"72\",\"fill\":\"#ffffff\",\"color\":\"#808000\",\"strokeWidth\":\"1\"},{\"type\":\"rect\",\"x\":\"163\",\"y\":\"252\",\"width\":\"150\",\"height\":\"375\",\"fill\":\"#ffffff\",\"color\":\"#808000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"x1\":\"414\",\"y1\":\"252\",\"x2\":\"414\",\"y2\":\"323\",\"color\":\"#808000\",\"strokeWidth\":\"3\"},{\"type\":\"line\",\"x1\":\"574\",\"y1\":\"254\",\"x2\":\"574\",\"y2\":\"323\",\"color\":\"#808000\",\"strokeWidth\":\"3\"},{\"type\":\"line\",\"x1\":\"164\",\"y1\":\"327\",\"x2\":\"310\",\"y2\":\"327\",\"color\":\"#808000\",\"strokeWidth\":\"3\"},{\"type\":\"text\",\"x\":\"199\",\"y\":\"388\",\"text\":\"输入内容\",\"fontFamily\":\"Menlo, sans-serif\",\"fontSize\":\"18\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"type\":\"text\",\"x\":\"464\",\"y\":\"293\",\"text\":\"表格123\",\"fontFamily\":\"Menlo, sans-serif\",\"fontSize\":\"18\",\"fill\":\"#0080ff\",\"color\":\"#0080c0\",\"strokeWidth\":\"1\"}]}";
+        String json = "{\"layers\":[{\"fontSize\":\"89\",\"type\":\"text\",\"x\":100,\"y\":238,\"originalY\":198.3125,\"text\":\"输入内容\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":\"38\",\"type\":\"text\",\"x\":0,\"y\":173,\"originalY\":156.609375,\"text\":\"输入内容\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":\"18\",\"type\":\"text\",\"x\":161,\"y\":173,\"originalY\":164.609375,\"text\":\"输入内容\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":\"18\",\"type\":\"text\",\"x\":369,\"y\":299,\"originalY\":290.609375,\"text\":\"输入内容\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"}]}";
         Pager pager = new JsonPageBuilder().build(json);
         PrintCommand command = new PrintCommand();
         command.setPagers(Arrays.asList(pager));
@@ -54,7 +54,7 @@ public class JsonPageBuilderTest {
         pras.add(PrintQuality.HIGH);
         pras.add(MediaSizeName.ISO_A4);
 
-        pras.add(new MediaPrintableArea(20, 20, Paper.A4.getWidth(), Paper.A4.getHeight(), MediaPrintableArea.INCH));
+        pras.add(new MediaPrintableArea(0, 0, Paper.A4.getWidth(), Paper.A4.getHeight(), MediaPrintableArea.INCH));
         Doc doc = new SimpleDoc(defaultPrintable, flavor, null);
 
         job.print(doc, pras);

@@ -23,6 +23,6 @@ public class TextLayer extends AbstractLayer {
             text = "";
         }
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics.drawString(text, getX(), getY());
+        graphics.drawString(text, getX(), getY()+graphics.getFontMetrics().getHeight());
     }
 }
