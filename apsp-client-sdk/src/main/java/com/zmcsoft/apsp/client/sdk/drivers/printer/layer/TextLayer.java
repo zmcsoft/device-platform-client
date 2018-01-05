@@ -22,7 +22,6 @@ public class TextLayer extends AbstractLayer {
         if (text == null) {
             text = "";
         }
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics.drawString(text, getX(), getY() + graphics.getFontMetrics().getMaxAscent() - graphics.getFontMetrics().getLeading());
+       graphics.drawString(text, getX(), getY() + graphics.getFontMetrics().getMaxAscent() - graphics.getFontMetrics().getLeading());
     }
 }

@@ -12,13 +12,17 @@
 package com.zmcsoft.apsp.client.sdk.drivers.printer.executor;
 
 
-import com.zmcsoft.apsp.client.sdk.drivers.printer.Layer;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.Pager;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.PrintCommand;
+import com.zmcsoft.apsp.client.sdk.drivers.printer.listener.PrinterListener;
+import com.zmcsoft.apsp.client.sdk.drivers.printer.listener.event.PrinterPageDoneEvent;
 
 import java.awt.*;
 import java.awt.print.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author zhouhao
@@ -38,6 +42,16 @@ public class DefaultPrintable implements Printable {
 
     private int yPadding = 0;
 
+    private int renderedPage = 0;
+
+    private PrinterListener<PrinterPageDoneEvent> pageDoneEventPrinterListener;
+
+    private Map<Integer, AtomicInteger> renderCounter = new HashMap<>();
+
+    public void setPageDoneEventPrinterListener(PrinterListener<PrinterPageDoneEvent> pageDoneEventPrinterListener) {
+        this.pageDoneEventPrinterListener = pageDoneEventPrinterListener;
+    }
+
     public DefaultPrintable(PrintCommand printCommand) {
         this.printCommand = printCommand;
         this.width = printCommand.getPaper().getWidth();
@@ -45,22 +59,29 @@ public class DefaultPrintable implements Printable {
         noPrintPager = printCommand.getPagers().get(0);
     }
 
-
     @Override
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+        AtomicInteger counter = renderCounter.computeIfAbsent(pageIndex, p -> new AtomicInteger());
         List<Pager> pagerList = printCommand.getPagers();
         if (pagerList.size() <= pageIndex) {
             return NO_SUCH_PAGE;
         }
-        noPrintPager = pagerList.get(pageIndex);
-        noPrintPager.getLayers().forEach(layer -> layer.draw(((Graphics2D) graphics)));
+        if (counter.get() == 1) {
+            ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            noPrintPager = pagerList.get(pageIndex);
+            noPrintPager.getLayers().forEach(layer -> layer.draw(((Graphics2D) graphics)));
+//            if (null != pageDoneEventPrinterListener) {
+//                pageDoneEventPrinterListener.on(new PrinterPageDoneEvent(pageIndex));
+//            }
+        }
+        counter.incrementAndGet();
         return PAGE_EXISTS;
     }
 
     /**
      * 获取打印页
      *
-     * @return
+     * @return 1.0
      */
     public Paper getPaper() {
         //通过Paper设置页面的空白边距和可打印区域。必须与实际打印纸张大小相符。

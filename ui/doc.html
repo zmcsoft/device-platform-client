@@ -29,18 +29,21 @@
             edit: true,
             download: true
         },
+        // type: "mobile",
         "document": {
             "fileType": "xlsx",
-            "key": "123123",
-            "title": "Example Document Title.xlsx",
+            "key": "11234",
+            "title": "测试.xlsx",
             "url": "http://file.rex.hsweb.me:8088/upload/20171229/2468076635066240.xlsx"
         },
         "documentType": "text",
         "editorConfig": {
-            mode: "edit",
-            "callbackUrl": "http://172.28.23.4:8080/IndexServlet?type=track&fileName=24706802468076635066240260936841.xlsx&userAddress=127.0.1.1"
+            lang: "zh",
+            mode: "view",
+            callbackUrl: "http://172.17.0.1:8080/IndexServlet?type=track&fileName=2468076635066240.xlsx&userAddress=172.17.0.3"
         }
     };
+
     var docEditor = new DocsAPI.DocEditor("placeholder", config);
 
 </script>

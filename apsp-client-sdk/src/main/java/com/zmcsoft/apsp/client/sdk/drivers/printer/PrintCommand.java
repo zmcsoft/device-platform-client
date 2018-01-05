@@ -4,6 +4,7 @@ package com.zmcsoft.apsp.client.sdk.drivers.printer;
 import lombok.Data;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author zhouhao
