@@ -23,28 +23,38 @@
             <artifactId>apsp-client-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.hswebframework</groupId>
+            <artifactId>hsweb-expands-request</artifactId>
+            <version>${hsweb.expands.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.3.1</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.hynnet/jacob -->
-        <dependency>
-            <groupId>com.hynnet</groupId>
-            <artifactId>jacob</artifactId>
-            <version>1.18</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.hynnet</groupId>-->
+            <!--<artifactId>jacob</artifactId>-->
+            <!--<version>1.18</version>-->
+        <!--</dependency>-->
         <!-- https://mvnrepository.com/artifact/org.rxtx/rxtx -->
-        <dependency>
-            <groupId>org.rxtx</groupId>
-            <artifactId>rxtx</artifactId>
-            <version>2.1.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.usb4java</groupId>
-            <artifactId>usb4java</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.usb4java</groupId>
-            <artifactId>usb4java-javax</artifactId>
-            <version>1.2.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.rxtx</groupId>-->
+            <!--<artifactId>rxtx</artifactId>-->
+            <!--<version>2.1.7</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.usb4java</groupId>-->
+            <!--<artifactId>usb4java</artifactId>-->
+            <!--<version>1.2.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.usb4java</groupId>-->
+            <!--<artifactId>usb4java-javax</artifactId>-->
+            <!--<version>1.2.0</version>-->
+        <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>org.xhtmlrenderer</groupId>-->
             <!--<artifactId>flying-saucer-pdf</artifactId>-->
