@@ -16,6 +16,7 @@ public abstract class AbstractPageBuilder implements PageBuilder {
         addBuilder(new LineLayerBuilder());
         addBuilder(new RectLayerBuilder());
         addBuilder(new TextLayerBuilder());
+        addBuilder(new ImageLayerBuilder());
     }
 
     static void addBuilder(LayerBuilder builder) {

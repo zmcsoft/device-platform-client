@@ -15,10 +15,7 @@ import org.hswebframework.expands.request.SimpleRequestBuilder;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -30,7 +27,7 @@ import java.util.Map;
  */
 public class ImageLayerBuilder extends AbstractLayerBuilder {
     public ImageLayerBuilder() {
-        super("image");
+        super("img");
     }
 
     public static RequestBuilder requestBuilder = new SimpleRequestBuilder();
@@ -72,9 +69,12 @@ public class ImageLayerBuilder extends AbstractLayerBuilder {
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
 
+    public static void main(String[] args) throws MalformedURLException {
+        System.out.println(new URL("file:d:/test.jpg").getFile());
+    }
     private Image createImage(int width, int height) {
-        String type = getString("imageType", "static");
-        String imageData = getString("imageData", "");
+        String type = getString("imgType", "static");
+        String imageData = getString("imgData", "");
         try {
             if ("static".equals(type)) {
                 if (imageData.startsWith("http")) {
@@ -83,7 +83,7 @@ public class ImageLayerBuilder extends AbstractLayerBuilder {
                         return ImageIO.read(inputStream);
                     }
                 } else if (imageData.startsWith("file")) {
-                    try (InputStream inputStream = new URL(imageData).openStream()) {
+                    try (InputStream inputStream = new FileInputStream(new File(new URL(imageData).getFile()).getAbsolutePath())) {
                         return ImageIO.read(inputStream);
                     }
                 } else {
@@ -97,7 +97,7 @@ public class ImageLayerBuilder extends AbstractLayerBuilder {
                 return createBarCode(width, height, imageData);
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return null;
     }
