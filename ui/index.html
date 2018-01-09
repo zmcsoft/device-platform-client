@@ -4,19 +4,25 @@
     <meta charset="UTF-8">
     <meta http-equiv=Content-Type content="text/html;charset=utf-8">
     <title>测试</title>
-    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
-            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-            crossorigin="anonymous"></script>
+    <script src="jquery-1.12.4.min.js"></script>
 
     <script src="http://localhost:5010/js-api/drivers.js"></script>
 
     <style rel="stylesheet" type="text/css">
         * {
+            /*cursor: none;*/
             font-family: 'YaHei Consolas Hybrid';
+            moz-user-select: -moz-none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
     </style>
 </head>
-<body>
+<body oncopy="return false" ondragstart="return false" onselectstart="return false">
 <button onclick="doPrintReview()">打印预览</button>
 <button onclick="doPrint()">打印</button>
 
@@ -25,6 +31,11 @@
 <button onclick="devices.camera.close(function(success) {});window.clearInterval(t);t=null">关闭摄像头</button>
 
 <button onclick="getCameraImage()">拍照</button>
+<button onclick="window.location.reload()">刷新</button>
+
+<button onclick="window.controller.hide()">关闭</button>
+
+<button id="full-screen" onclick="changeScreen()">退出全屏</button>
 
 <br>
 <img id="cameraImg" style="border: 1px solid gray;width: 210mm"/>
@@ -35,6 +46,20 @@
 <script type="text/javascript">
 
     var t;
+
+    function changeScreen() {
+        window.controller.fullScreen(!window.controller.isFullScreen());
+
+        $("#full-screen").text(window.controller.isFullScreen() ? "退出全屏" : "全屏");
+    }
+
+    function exit() {
+        window.controller.hide();
+    }
+
+    function fullScreen(f) {
+        window.controller.fullScreen(f);
+    }
 
     function getCameraImage() {
         function doGet() {

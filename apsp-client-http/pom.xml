@@ -10,7 +10,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>apsp-client-http</artifactId>
-
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.zmcsoft.apsp.client.http.HttpApiServer</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>com.zmcsoft.apsp</groupId>

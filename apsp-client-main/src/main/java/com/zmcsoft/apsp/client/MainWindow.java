@@ -7,8 +7,13 @@ import com.zmcsoft.apsp.client.javascript.JavaScriptObject;
 import com.zmcsoft.apsp.client.javascript.Console;
 import com.zmcsoft.apsp.client.javascript.drivers.DeviceDriversWrapper;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.concurrent.Worker;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
@@ -31,9 +36,23 @@ public class MainWindow extends Application {
     private String title = ApplicationConfig.getConfig("app.title", "apsp client 1.0");
     private Scene scene;
 
+    private static Stage stage;
+
     private boolean debug = "true".equals(ApplicationConfig.getConfig("debug", "true"));
 
     private static List<JavaScriptObject> objects = new ArrayList<>();
+
+    static volatile boolean hide = false;
+
+    public static void hide() {
+        hide = true;
+        stage.hide();
+    }
+
+    public static void show() {
+        hide = false;
+        stage.show();
+    }
 
     static {
         objects.add(new Console());
@@ -43,7 +62,8 @@ public class MainWindow extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
+        this.stage = primaryStage;
         StackPane root = new StackPane();
         primaryStage.setTitle(title);
         root.setPrefHeight(600);
@@ -64,10 +84,11 @@ public class MainWindow extends Application {
                             if (object instanceof AbstractJavaScriptObject) {
                                 ((AbstractJavaScriptObject) object).setEngine(engine);
                             }
+                            jsObject.setMember("controller", new Controller());
                             jsObject.setMember(object.getName(), object);
                         }
                         if (debug) {
-                             webView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
+                            //  webView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
                         }
                     }
                 });
@@ -77,16 +98,51 @@ public class MainWindow extends Application {
         //engine.loadContent("<h1 style=\"font-family: 'YaHei Consolas Hybrid'\">abcABC1234测试</h1>");
         engine.load(new File("./ui/index.html").toURI().toString());
         root.getChildren().add(webView);
-
         primaryStage.setOnCloseRequest(event -> {
-            Global.executorService.shutdown();
+            Global.executorService.execute(() -> {
+                Platform.runLater(() -> {
+                    if (!hide) {
+                        show();
+                    }
+                });
+            });
         });
-        primaryStage.show();
-        root.setVisible(true);
-        // primaryStage.setFullScreen(true);
+        // root.setVisible(true);
+        if (!debug) {
+            primaryStage.setFullScreenExitKeyCombination(new KeyCombination() {
+                @Override
+                public boolean match(KeyEvent event) {
+                    if (event.isControlDown() && event.isAltDown()) {
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            primaryStage.setFullScreenExitHint("");
+            primaryStage.setAlwaysOnTop(true);
+            primaryStage.setFullScreen(true);
+
+            webView.setContextMenuEnabled(false);
+            //webView.getEngine().setUserAgent("");
+            primaryStage.show();
+        }
     }
 
-    public static void main(String[] args) throws Exception {
-        launch(args);
+    public class Controller {
+        public void hide() {
+            MainWindow.hide();
+        }
+
+        public void show() {
+            MainWindow.show();
+        }
+
+        public void fullScreen(boolean fc) {
+            stage.setFullScreen(fc);
+        }
+
+        public boolean isFullScreen() {
+            return stage.isFullScreen();
+        }
     }
 }

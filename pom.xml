@@ -27,6 +27,7 @@
     </properties>
 
     <build>
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
