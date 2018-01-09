@@ -1,144 +1,69 @@
 package com.zmcsoft.apsp.client.sdk.drivers.camera;
 
-import com.github.sarxos.webcam.Webcam;
-import com.zmcsoft.apsp.client.core.Global;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.zmcsoft.apsp.client.sdk.drivers.DeviceDriver;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
 /**
+ * 摄像头驱动
+ *
  * @author zhouhao
  * @since 1.0
  */
-public class CameraDriver {
-    private static final Logger log = LoggerFactory.getLogger(CameraDriver.class);
+public interface CameraDriver extends DeviceDriver {
+    /**
+     * 摄像头是否已经打开
+     *
+     * @return boolean
+     */
+    boolean isOpen();
 
-    private int readImageTimeOut = 1;
+    /**
+     * 打开摄像头
+     *
+     * @return 是否打开成功
+     */
+    boolean open();
 
-    private static final byte[] empty = new byte[0];
+    /**
+     * 关闭摄像头
+     *
+     * @return 是否关闭成功
+     */
+    boolean close();
 
-    private volatile Webcam webcam;
+    /**
+     * 录制
+     *
+     * @param recordListener 录制
+     */
+    void record(Consumer<BufferedImage> recordListener);
 
-    private volatile boolean open = false;
+    /**
+     * 停止录制
+     */
+    void stopRecord();
 
-    private BufferedImage tempImage;
+    /**
+     * 拍照
+     *
+     * @return 拍照的图片对象, 如果失败返回null
+     * @see BufferedImage
+     */
+    BufferedImage photographImage();
 
-    private List<CameraListener<BufferedImage>> recordListeners = new ArrayList<>();
+    /**
+     * 拍照,并返回照片的base64,图片编码为png
+     *
+     * @return png格式图片的base64, 如果失败返回空字符串
+     */
+    String photographBase64();
 
-    public CameraDriver() {
-        this(Webcam.getDefault());
-        // Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
-    }
-
-    public void setWebcam(Webcam webcam) {
-        if (webcam != this.webcam) {
-            stop();
-        }
-        this.webcam = webcam;
-    }
-
-    public Webcam getWebcam() {
-        return webcam;
-    }
-
-    public boolean isOpen() {
-        return webcam.isOpen();
-    }
-
-    public CameraDriver(Webcam webcam) {
-        this.webcam = webcam;
-    }
-
-
-    public void open(CameraListener<Boolean> openCallback) {
-        if (open) {
-            openCallback.on(true);
-            return;
-        }
-        this.tempImage = null;
-        Global.executorService.execute(() -> {
-            try {
-                open = webcam.open();
-            } finally {
-                openCallback.on(open);
-            }
-        });
-    }
-
-    public void stopRecord() {
-        recordListeners.clear();
-    }
-
-    public void stop() {
-        if (!open) {
-            return;
-        }
-        this.tempImage = null;
-        open = false;
-        recordListeners.clear();
-        Global.executorService.execute(() -> {
-            webcam.close();
-        });
-    }
-
-    private void tryStartRecord() {
-        if (recordListeners.isEmpty()) {
-            return;
-        }
-        Global.executorService.execute(() -> {
-            while (!recordListeners.isEmpty()) {
-                try {
-                    if ((tempImage = webcam.getImage()) != null) {
-                        for (CameraListener<BufferedImage> listener : recordListeners) {
-                            listener.on(tempImage);
-                        }
-                    }
-                } catch (Exception e) {
-                    log.warn("update camera image error", e);
-                }
-            }
-        });
-    }
-
-    public void record(CameraListener<BufferedImage> recordListener) {
-        recordListeners.add(recordListener);
-        tryStartRecord();
-    }
-
-    public byte[] getImageData() {
-        if (!open) {
-            return empty;
-        }
-        try {
-            return Global.executorService.submit(() -> {
-                BufferedImage image = this.tempImage == null ? webcam.getImage() : this.tempImage;
-                if (null == image) {
-                    return empty;
-                }
-                try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                    ImageIO.write(image, "png", outputStream);
-                    return outputStream.toByteArray();
-                } catch (IOException e) {
-                    log.warn("get camera image error!", e);
-                }
-                return empty;
-            }).get(readImageTimeOut, TimeUnit.SECONDS);
-        } catch (TimeoutException ignore) {
-        } catch (Exception e) {
-            log.warn("get camera image error!", e);
-        }
-        return empty;
-    }
-
-    public void setReadImageTimeOut(int readImageTimeOut) {
-        this.readImageTimeOut = readImageTimeOut;
-    }
+    /**
+     * 拍照,并返回照片的byte数据,图片编码为png
+     *
+     * @return png格式图片的数据, 如果失败返回 new byte[0]
+     */
+    byte[] photographBytes();
 }

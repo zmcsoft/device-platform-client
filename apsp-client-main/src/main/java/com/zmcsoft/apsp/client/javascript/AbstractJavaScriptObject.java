@@ -1,5 +1,6 @@
 package com.zmcsoft.apsp.client.javascript;
 
+import javafx.application.Platform;
 import javafx.scene.web.WebEngine;
 import lombok.extern.slf4j.Slf4j;
 import netscape.javascript.JSObject;
@@ -11,13 +12,15 @@ import org.hswebframework.utils.RandomUtil;
  */
 @Slf4j
 public abstract class AbstractJavaScriptObject implements JavaScriptObject {
-    private WebEngine engine;
+    protected WebEngine engine;
 
-    private JSObject window;
+    protected JSObject window;
 
     public void setEngine(WebEngine engine) {
         this.engine = engine;
-        window = (JSObject) engine.executeScript("window");
+        Platform.runLater(()->{
+            window = (JSObject) engine.executeScript("window");
+        });
     }
 
     @SuppressWarnings("all")
@@ -32,6 +35,10 @@ public abstract class AbstractJavaScriptObject implements JavaScriptObject {
     }
 
     protected Object call(Object object, Object args) {
+        if (object == null) {
+            return null;
+        }
+
         String funName = "f_" + RandomUtil.randomChar();
         String paramName = "p_" + RandomUtil.randomChar();
         window.setMember(funName, object);

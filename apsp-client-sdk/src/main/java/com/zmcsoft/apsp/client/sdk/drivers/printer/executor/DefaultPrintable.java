@@ -42,15 +42,7 @@ public class DefaultPrintable implements Printable {
 
     private int yPadding = 0;
 
-    private int renderedPage = 0;
-
-    private PrinterListener<PrinterPageDoneEvent> pageDoneEventPrinterListener;
-
     private Map<Integer, AtomicInteger> renderCounter = new HashMap<>();
-
-    public void setPageDoneEventPrinterListener(PrinterListener<PrinterPageDoneEvent> pageDoneEventPrinterListener) {
-        this.pageDoneEventPrinterListener = pageDoneEventPrinterListener;
-    }
 
     public DefaultPrintable(PrintCommand printCommand) {
         this.printCommand = printCommand;
@@ -70,9 +62,6 @@ public class DefaultPrintable implements Printable {
             ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             noPrintPager = pagerList.get(pageIndex);
             noPrintPager.getLayers().forEach(layer -> layer.draw(((Graphics2D) graphics)));
-//            if (null != pageDoneEventPrinterListener) {
-//                pageDoneEventPrinterListener.on(new PrinterPageDoneEvent(pageIndex));
-//            }
         }
         counter.incrementAndGet();
         return PAGE_EXISTS;

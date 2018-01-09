@@ -2,12 +2,10 @@ package com.zmcsoft.apsp.client;
 
 import com.zmcsoft.apsp.client.core.ApplicationConfig;
 import com.zmcsoft.apsp.client.core.Global;
-import com.zmcsoft.apsp.client.database.H2DatabaseManager;
 import com.zmcsoft.apsp.client.javascript.AbstractJavaScriptObject;
-import com.zmcsoft.apsp.client.javascript.drivers.CameraJavaScriptOperation;
 import com.zmcsoft.apsp.client.javascript.JavaScriptObject;
 import com.zmcsoft.apsp.client.javascript.Console;
-import com.zmcsoft.apsp.client.javascript.drivers.PrintDriver;
+import com.zmcsoft.apsp.client.javascript.drivers.DeviceDriversWrapper;
 import javafx.application.Application;
 import javafx.concurrent.Worker;
 import javafx.scene.Scene;
@@ -39,8 +37,7 @@ public class MainWindow extends Application {
 
     static {
         objects.add(new Console());
-        objects.add(new PrintDriver());
-        objects.add((JavaScriptObject) H2DatabaseManager.getSqlExecutor());
+        objects.add(new DeviceDriversWrapper());
         //log.info("load font YaHei.Consolas.ttf");
         //  Font.loadFont(MainWindow.class.getResource("YaHei.Consolas.ttf").toExternalForm(), 20);
     }
@@ -55,7 +52,6 @@ public class MainWindow extends Application {
 
         WebView webView = new WebView();
         webView.setFontSmoothingType(FontSmoothingType.LCD);
-        CameraJavaScriptOperation cameraOperation = new CameraJavaScriptOperation(root);
         final WebEngine engine = webView.getEngine();
 
         engine.setUserDataDirectory(new File("./data/browser"));
@@ -70,13 +66,9 @@ public class MainWindow extends Application {
                             }
                             jsObject.setMember(object.getName(), object);
                         }
-                        cameraOperation.setEngine(engine);
-                        jsObject.setMember("database", H2DatabaseManager.getDatabase());
-                        jsObject.setMember("camera", cameraOperation);
                         if (debug) {
-                            webView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
+                             webView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
                         }
-
                     }
                 });
         engine.setOnError(event -> {
@@ -87,7 +79,6 @@ public class MainWindow extends Application {
         root.getChildren().add(webView);
 
         primaryStage.setOnCloseRequest(event -> {
-            cameraOperation.stop();
             Global.executorService.shutdown();
         });
         primaryStage.show();
