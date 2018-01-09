@@ -3,7 +3,10 @@ package com.zmcsoft.apsp.client.javascript.drivers;
 import com.zmcsoft.apsp.client.core.Global;
 import com.zmcsoft.apsp.client.javascript.AbstractJavaScriptObject;
 import com.zmcsoft.apsp.client.sdk.drivers.camera.CameraDriver;
+import io.reactivex.Observable;
 import javafx.application.Platform;
+
+import static com.zmcsoft.apsp.client.core.Global.executorService;
 
 /**
  * @author zhouhao
@@ -12,33 +15,32 @@ import javafx.application.Platform;
 public class CameraJavaScriptOperation extends AbstractJavaScriptObject {
     private CameraDriver cameraDriver;
 
+    public void setCameraDriver(CameraDriver cameraDriver) {
+        this.cameraDriver = cameraDriver;
+    }
+
     public CameraJavaScriptOperation(CameraDriver driver) {
         this.cameraDriver = driver;
     }
 
     public void open(Object callback) {
-        Global.executorService.execute(() -> Platform.runLater(() -> call(callback, cameraDriver.open())));
+        execute(cameraDriver::open, callback);
     }
 
     public void isOpen(Object callback) {
-        call(callback, cameraDriver.isOpen());
+        execute(cameraDriver::isOpen, callback);
     }
 
     public void getImageBase64(Object callback) {
-        call(callback, cameraDriver.photographBase64());
+        execute(cameraDriver::photographBase64, callback);
     }
 
     public void stop(Object callback) {
-        call(callback, cameraDriver.close());
+        execute(cameraDriver::close, callback);
     }
 
     public void close(Object callback) {
         stop(callback);
-    }
-
-    public void stopRecord(Object callback) {
-        cameraDriver.stopRecord();
-        call(callback, true);
     }
 
     @Override

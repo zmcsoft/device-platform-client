@@ -9,9 +9,9 @@ import javafx.scene.web.WebEngine;
  * @since 1.0
  */
 public class DeviceDriversWrapper extends AbstractJavaScriptObject {
-    public CameraJavaScriptOperation camera;
+    public volatile CameraJavaScriptOperation camera;
 
-    public PrinterJavaScriptOperation printer;
+    public volatile PrinterJavaScriptOperation printer;
 
     @Override
     public String getName() {
@@ -20,9 +20,14 @@ public class DeviceDriversWrapper extends AbstractJavaScriptObject {
 
     @Override
     public void setEngine(WebEngine engine) {
+        if (camera == null) {
+            camera = new CameraJavaScriptOperation(DeviceDriverManager.drivers().camera());
+            printer = new PrinterJavaScriptOperation(null);
+        }
+        camera.setCameraDriver(DeviceDriverManager.drivers().camera());
+        camera.setEngine(engine);
+        printer.setEngine(engine);
         super.setEngine(engine);
-        camera = wrap(new CameraJavaScriptOperation(DeviceDriverManager.drivers().camera()));
-        printer = wrap(new PrinterJavaScriptOperation(null));
     }
 
     private <T extends AbstractJavaScriptObject> T wrap(T target) {

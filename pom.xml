@@ -59,6 +59,12 @@
     </build>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/io.reactivex.rxjava2/rxjava -->
+        <dependency>
+            <groupId>io.reactivex.rxjava2</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>2.1.8</version>
+        </dependency>
         <dependency>
             <groupId>org.jyaml</groupId>
             <artifactId>jyaml</artifactId>

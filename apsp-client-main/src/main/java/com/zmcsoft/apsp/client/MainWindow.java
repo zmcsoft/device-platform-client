@@ -63,7 +63,7 @@ public class MainWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        this.stage = primaryStage;
+        stage = primaryStage;
         StackPane root = new StackPane();
         primaryStage.setTitle(title);
         root.setPrefHeight(600);

@@ -165,6 +165,8 @@ public class DefaultCameraDriver implements CameraDriver {
                     return outputStream.toByteArray();
                 } catch (IOException e) {
                     log.warn("get camera image error!", e);
+                }finally {
+                    image.flush();
                 }
                 return empty;
             }).get(readImageTimeOut, TimeUnit.SECONDS);

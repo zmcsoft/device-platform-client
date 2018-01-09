@@ -6,12 +6,15 @@ import com.zmcsoft.apsp.client.javascript.AbstractJavaScriptObject;
 import com.zmcsoft.apsp.client.sdk.drivers.DeviceDriverRegister;
 import com.zmcsoft.apsp.client.sdk.drivers.DeviceDriverManager;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.*;
+import com.zmcsoft.apsp.client.sdk.drivers.printer.PrintJob;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.builder.JsonPageBuilder;
+import io.reactivex.Observable;
 import javafx.application.Platform;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,33 +50,44 @@ public class PrinterJavaScriptOperation extends AbstractJavaScriptObject {
     }
 
     public void preview(String json, Object callback) {
-        Platform.runLater(() -> {
-            List<Pager> pager = builder.build(json);
+        List<Pager> pager = builder.build(json);
+        execute(() -> {
             BufferedImage image = PrinterUtils.graphicsToImage(pager, new PixelPaper(72, Paper.A4));
             try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 ImageIO.write(image, "png", outputStream);
-                call(callback, Base64.encodeBase64String(outputStream.toByteArray()));
+                image.flush();
+                return Base64.encodeBase64String(outputStream.toByteArray());
             } catch (IOException e) {
                 log.error("创建预览图失败", e);
+            } finally {
+                pager.clear();
             }
-        });
+            return "";
+        }, callback);
+//        execute(() -> {
+//            List<Pager> pager = builder.build(json);
+//            BufferedImage image = PrinterUtils.graphicsToImage(pager, new PixelPaper(72, Paper.A4));
+//            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+//                ImageIO.write(image, "png", outputStream);
+//                call(callback, Base64.encodeBase64String(outputStream.toByteArray()));
+//            } catch (IOException e) {
+//                log.error("创建预览图失败", e);
+//            }
+//        });
     }
 
     public void print(String json, Object callback) {
-        Global.executorService.execute(() -> {
-            Platform.runLater(() -> {
-                try {
-                    List<Pager> pagers = builder.build(json);
-                    PrintJob job = getDriver().print(pagers);
-                    job.onPrintDone((index, pager) -> {
-                        Platform.runLater(() -> {
-                            call(callback, index);
-                        });
-                    });
-                } catch (Exception e) {
-                    log.error("打印失败", e);
-                }
-            });
+        cache.add(callback);
+        execute(() -> {
+            try {
+                List<Pager> pagers = builder.build(json);
+                PrintJob job = getDriver().print(pagers);
+                job.onPrintDone((index, pager) -> {
+                    call(callback, index);
+                });
+            } catch (Exception e) {
+                log.error("打印失败", e);
+            }
         });
     }
 
