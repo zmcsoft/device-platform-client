@@ -31,6 +31,7 @@
 <button onclick="devices.camera.close(function(success) {});window.clearInterval(t);t=null">关闭摄像头</button>
 
 <button onclick="getCameraImage()">拍照</button>
+<button onclick="record()">实时拍照</button>
 <button onclick="window.location.reload()">刷新</button>
 
 <button onclick="window.controller.hide()">关闭</button>
@@ -61,11 +62,20 @@
         window.controller.fullScreen(f);
     }
 
+    function record() {
+        var t;
+        t = window.setTimeout(function () {
+            window.clearTimeout(t);
+            getCameraImage();
+            record();
+        }, 200);
+    }
+
     function getCameraImage() {
         function doGet() {
             devices.camera.getImageBase64(function (base64) {
                 if (!base64) return;
-                console.log(base64);
+              //  console.log(base64);
                 document.getElementById("cameraImg").src = "data:image/png;base64," + base64;
             });
         }

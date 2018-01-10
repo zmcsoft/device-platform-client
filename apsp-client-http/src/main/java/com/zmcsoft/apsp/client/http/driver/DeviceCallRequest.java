@@ -16,4 +16,6 @@ public class DeviceCallRequest {
     private String action;
 
     private String data;
+
+    private String code;
 }

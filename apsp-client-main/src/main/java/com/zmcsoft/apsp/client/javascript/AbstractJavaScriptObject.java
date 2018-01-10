@@ -1,5 +1,6 @@
 package com.zmcsoft.apsp.client.javascript;
 
+import com.sun.glass.ui.Application;
 import com.zmcsoft.apsp.client.core.Global;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -31,15 +32,13 @@ public abstract class AbstractJavaScriptObject implements JavaScriptObject {
 
     private AtomicLong counter = new AtomicLong();
 
-    protected  static Set<Object> cache = new HashSet<>();
+    protected static Set<Object> cache = new HashSet<>();
 
     public void setEngine(WebEngine engine) {
         try {
             cache.clear();
             this.engine = engine;
-//        Platform.runLater(() -> {
             window = (JSObject) engine.executeScript("window");
-//        });
         } finally {
             counter.set(0L);
         }
@@ -85,13 +84,13 @@ public abstract class AbstractJavaScriptObject implements JavaScriptObject {
             return;
         }
         if (!cache.contains(object)) {
-            log.warn("page reloaded!");
+            //log.warn("page reloaded!");
             return;
         }
-        Platform.runLater(() -> {
+        Application.invokeLater(() -> {
             if (!cache.contains(object)) {
                 log.warn("page reloaded!");
-                return;
+               // return;
             }
             String funName = "f_" + RandomUtil.randomChar();
             String paramName = "p_" + RandomUtil.randomChar();

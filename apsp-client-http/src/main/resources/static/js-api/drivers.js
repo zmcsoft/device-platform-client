@@ -1,7 +1,10 @@
 (function () {
         var Device = {
-            api: "http://127.0.0.1:5010/drivers"
+            api: "http://127.0.0.1:5010/drivers",
+            wsApi: "ws://127.0.0.1:5011"
         };
+        var socket;
+        var callbacks = {};
 
         function createCallback(call) {
             if (!call) {
@@ -12,22 +15,37 @@
             }
         }
 
-        Device.call = function (device, provider, action, data, call) {
-            var r = $.ajax({
-                type: "POST",
-                contentType: "application/json",
-                dataType: "json",
-                url: Device.api,
-                async: typeof call !== 'undefined',
-                data: JSON.stringify({device: device, provider: provider, action: action, data: typeof data === 'string' ? data : JSON.stringify(data)})
-                , success: function (e) {
-                    if (call) {
-                        call(e);
-                    }
+        if (window.WebSocket) {
+            socket = new WebSocket(Device.wsApi);
+            socket.onmessage = function (ev) {
+                var res = JSON.parse(ev.data);
+                if (res.code && callbacks[res.code]) {
+                    callbacks[res.code](res);
                 }
-            });
-            if (r) {
-                return r.responseJSON;
+                delete callbacks[res.code];
+            }
+        }
+
+        Device.call = function (device, provider, action, data, call) {
+            var code = Math.round(Math.random() * 10000000);
+            var d = JSON.stringify({code: code, device: device, provider: provider, action: action, data: typeof data === 'string' ? data : JSON.stringify(data)});
+            if (socket) {
+                callbacks[code] = call;
+                socket.send(d)
+            } else {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    url: Device.api,
+                    async: typeof call !== 'undefined',
+                    data: d
+                    , success: function (e) {
+                        if (call) {
+                            call(e);
+                        }
+                    }
+                });
             }
         };
 
