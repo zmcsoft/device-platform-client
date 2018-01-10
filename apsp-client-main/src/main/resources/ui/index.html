@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <title>测试</title>
+    <script src="jquery-1.12.4.min.js"></script>
+
+    <script src="http://localhost:5010/js-api/drivers.js"></script>
+
+    <style rel="stylesheet" type="text/css">
+        * {
+            /*cursor: none;*/
+            font-family: 'YaHei Consolas Hybrid';
+            moz-user-select: -moz-none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body oncopy="return false" ondragstart="return false" onselectstart="return false">
+<button onclick="doPrintReview()">打印预览</button>
+<button onclick="doPrint()">打印</button>
+
+<button onclick="devices.camera.open(function(){})">打开摄像头</button>
+
+<button onclick="devices.camera.close(function(success) {});window.clearInterval(t);t=null">关闭摄像头</button>
+
+<button onclick="getCameraImage()">拍照</button>
+<button onclick="record()">实时拍照</button>
+<button onclick="window.location.reload()">刷新</button>
+
+<button onclick="window.controller.hide()">关闭</button>
+
+<button id="full-screen" onclick="changeScreen()">退出全屏</button>
+
+<br>
+<img id="cameraImg" style="border: 1px solid gray;width: 210mm"/>
+
+<span id="inp"></span>
+</body>
+</html>
+<script type="text/javascript">
+
+    var t;
+
+    function changeScreen() {
+        window.controller.fullScreen(!window.controller.isFullScreen());
+
+        $("#full-screen").text(window.controller.isFullScreen() ? "退出全屏" : "全屏");
+    }
+
+    function exit() {
+        window.controller.hide();
+    }
+
+    function fullScreen(f) {
+        window.controller.fullScreen(f);
+    }
+
+    function record() {
+        var t;
+        t = window.setTimeout(function () {
+            window.clearTimeout(t);
+            getCameraImage();
+            record();
+        }, 200);
+    }
+
+    function getCameraImage() {
+        function doGet() {
+            devices.camera.getImageBase64(function (base64) {
+                if (!base64) return;
+              //  console.log(base64);
+                document.getElementById("cameraImg").src = "data:image/png;base64," + base64;
+            });
+        }
+
+        devices.camera.isOpen(function (isOpen) {
+            if (!isOpen) {
+                devices.camera.open(function (success) {
+                    doGet();
+                });
+                return;
+            }
+            doGet();
+        });
+
+    }
+
+    function doPrintReview() {
+        var json = "{\"layers\":[{\"type\":\"rect\",\"rp\":\"rp96\",\"x\":18.75,\"y\":39.75,\"width\":558,\"height\":222,\"fill\":\"rgba(0,0,0,0)\",\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":18.75,\"y1\":61.5,\"x2\":577.5,\"y2\":61.5,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":18.75,\"y1\":83.25,\"x2\":576.75,\"y2\":83.25,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":90.75,\"y1\":105,\"x2\":297,\"y2\":105,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":90,\"y1\":126.75,\"x2\":297.75,\"y2\":126.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":19.5,\"y1\":148.5,\"x2\":576.75,\"y2\":148.5,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":19.5,\"y1\":170.25,\"x2\":576,\"y2\":170.25,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":371.25,\"y1\":105,\"x2\":576,\"y2\":105,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":370.5,\"y1\":126.75,\"x2\":576,\"y2\":126.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":297.75,\"y1\":39.75,\"x2\":297.75,\"y2\":169.5,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":297.75,\"y1\":169.5,\"x2\":297.75,\"y2\":261,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":158.25,\"y1\":39.75,\"x2\":158.25,\"y2\":169.5,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":439.5,\"y1\":39.75,\"x2\":439.5,\"y2\":147.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":90.75,\"y1\":83.25,\"x2\":90.75,\"y2\":147.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":371.25,\"y1\":83.25,\"x2\":371.25,\"y2\":147.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":18.75,\"y\":263.25,\"originalY\":257.70703125,\"text\":\"打印机构：江阳支行\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":240,\"y\":263.25,\"originalY\":257.70703125,\"text\":\"打印次数：0次\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":374.25,\"y\":264,\"originalY\":258.45703125,\"text\":\"打印时间：2017-09-28 16:37:00\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":18.75,\"y\":23.25,\"originalY\":17.70703125,\"text\":\"入账日期：20470831\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":28.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":192,\"y\":2.23828125,\"originalY\":-9.3046875,\"text\":\"网上支付电子回单\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":55.5,\"y\":44.25,\"originalY\":37.95703125,\"text\":\"电子回单号\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":164.25,\"y\":44.25,\"originalY\":37.95703125,\"text\":\"20170922CS000381150\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":344.25,\"y\":44.25,\"originalY\":37.95703125,\"text\":\"交易类型\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":492.75,\"y\":43.5,\"originalY\":37.20703125,\"text\":\"转入\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":65.25,\"y\":66,\"originalY\":59.70703125,\"text\":\"交易流水\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":182.25,\"y\":66.75,\"originalY\":60.45703125,\"text\":\"0000000386542\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":345,\"y\":66.75,\"originalY\":60.45703125,\"text\":\"交易渠道\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":492.75,\"y\":66,\"originalY\":59.70703125,\"text\":\"柜面\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":21.75,\"type\":\"text\",\"rp\":\"rp96\",\"x\":23.25,\"y\":104.25,\"originalY\":94.734375,\"text\":\"付款人\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":20.25,\"type\":\"text\",\"rp\":\"rp96\",\"x\":305.25,\"y\":105.75,\"originalY\":96.6796875,\"text\":\"收款人\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":93,\"y\":88.5,\"originalY\":82.20703125,\"text\":\"全称\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":93,\"y\":109.5,\"originalY\":103.20703125,\"text\":\"账号\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":93,\"y\":131.25,\"originalY\":124.95703125,\"text\":\"开户行\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":162,\"y\":87,\"originalY\":80.70703125,\"text\":\"马云\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":161.25,\"y\":109.5,\"originalY\":103.20703125,\"text\":\"6230851001001648752\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":375.75,\"y\":87.75,\"originalY\":81.45703125,\"text\":\"全称\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":375,\"y\":109.5,\"originalY\":103.20703125,\"text\":\"账号\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":374.25,\"y\":131.25,\"originalY\":124.95703125,\"text\":\"开户行\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":442.5,\"y\":87.75,\"originalY\":81.45703125,\"text\":\"支付宝\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":442.5,\"y\":129.75,\"originalY\":123.45703125,\"text\":\"313657092617\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":56.25,\"y\":153,\"originalY\":146.70703125,\"text\":\"交易金额\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":159.75,\"y\":153.75,\"originalY\":147.45703125,\"text\":\"（大写）：叁拾亿元整\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":342,\"y\":153,\"originalY\":146.70703125,\"text\":\"（小写）：38000000000.00\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":23.25,\"y\":203.25,\"originalY\":196.95703125,\"text\":\"备注：\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":306.75,\"y\":204.75,\"originalY\":198.45703125,\"text\":\"银行盖章：\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"}]}";
+        devices.printer.preview(json, function (e) {
+            console.log(e);
+            document.getElementById("cameraImg").src = "data:image/png;base64," + e;
+        });
+    }
+
+    function doPrint() {
+        var json = "{\"layers\":[{\"type\":\"rect\",\"rp\":\"rp96\",\"x\":18.75,\"y\":39.75,\"width\":558,\"height\":222,\"fill\":\"rgba(0,0,0,0)\",\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":18.75,\"y1\":61.5,\"x2\":577.5,\"y2\":61.5,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":18.75,\"y1\":83.25,\"x2\":576.75,\"y2\":83.25,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":90.75,\"y1\":105,\"x2\":297,\"y2\":105,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":90,\"y1\":126.75,\"x2\":297.75,\"y2\":126.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":19.5,\"y1\":148.5,\"x2\":576.75,\"y2\":148.5,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":19.5,\"y1\":170.25,\"x2\":576,\"y2\":170.25,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":371.25,\"y1\":105,\"x2\":576,\"y2\":105,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":370.5,\"y1\":126.75,\"x2\":576,\"y2\":126.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":297.75,\"y1\":39.75,\"x2\":297.75,\"y2\":169.5,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":297.75,\"y1\":169.5,\"x2\":297.75,\"y2\":261,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":158.25,\"y1\":39.75,\"x2\":158.25,\"y2\":169.5,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":439.5,\"y1\":39.75,\"x2\":439.5,\"y2\":147.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":90.75,\"y1\":83.25,\"x2\":90.75,\"y2\":147.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"type\":\"line\",\"rp\":\"rp96\",\"x1\":371.25,\"y1\":83.25,\"x2\":371.25,\"y2\":147.75,\"color\":\"#ff0000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":18.75,\"y\":263.25,\"originalY\":257.70703125,\"text\":\"打印机构：江阳支行\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":240,\"y\":263.25,\"originalY\":257.70703125,\"text\":\"打印次数：0次\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":374.25,\"y\":264,\"originalY\":258.45703125,\"text\":\"打印时间：2017-09-28 16:37:00\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":18.75,\"y\":23.25,\"originalY\":17.70703125,\"text\":\"入账日期：20470831\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":28.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":192,\"y\":2.23828125,\"originalY\":-9.3046875,\"text\":\"网上支付电子回单\",\"fontFamily\":\"Helvetica, Arial, sans-serif\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":55.5,\"y\":44.25,\"originalY\":37.95703125,\"text\":\"电子回单号\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":164.25,\"y\":44.25,\"originalY\":37.95703125,\"text\":\"20170922CS000381150\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":344.25,\"y\":44.25,\"originalY\":37.95703125,\"text\":\"交易类型\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":492.75,\"y\":43.5,\"originalY\":37.20703125,\"text\":\"转入\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":65.25,\"y\":66,\"originalY\":59.70703125,\"text\":\"交易流水\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":182.25,\"y\":66.75,\"originalY\":60.45703125,\"text\":\"0000000386542\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":345,\"y\":66.75,\"originalY\":60.45703125,\"text\":\"交易渠道\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":492.75,\"y\":66,\"originalY\":59.70703125,\"text\":\"柜面\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":21.75,\"type\":\"text\",\"rp\":\"rp96\",\"x\":23.25,\"y\":104.25,\"originalY\":94.734375,\"text\":\"付款人\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":20.25,\"type\":\"text\",\"rp\":\"rp96\",\"x\":305.25,\"y\":105.75,\"originalY\":96.6796875,\"text\":\"收款人\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":93,\"y\":88.5,\"originalY\":82.20703125,\"text\":\"全称\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":93,\"y\":109.5,\"originalY\":103.20703125,\"text\":\"账号\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":93,\"y\":131.25,\"originalY\":124.95703125,\"text\":\"开户行\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":162,\"y\":87,\"originalY\":80.70703125,\"text\":\"马云\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":161.25,\"y\":109.5,\"originalY\":103.20703125,\"text\":\"6230851001001648752\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":375.75,\"y\":87.75,\"originalY\":81.45703125,\"text\":\"全称\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":375,\"y\":109.5,\"originalY\":103.20703125,\"text\":\"账号\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":374.25,\"y\":131.25,\"originalY\":124.95703125,\"text\":\"开户行\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":442.5,\"y\":87.75,\"originalY\":81.45703125,\"text\":\"支付宝\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":442.5,\"y\":129.75,\"originalY\":123.45703125,\"text\":\"313657092617\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":56.25,\"y\":153,\"originalY\":146.70703125,\"text\":\"交易金额\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":159.75,\"y\":153.75,\"originalY\":147.45703125,\"text\":\"（大写）：叁拾亿元整\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":342,\"y\":153,\"originalY\":146.70703125,\"text\":\"（小写）：38000000000.00\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":23.25,\"y\":203.25,\"originalY\":196.95703125,\"text\":\"备注：\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"},{\"fontSize\":13.5,\"type\":\"text\",\"rp\":\"rp96\",\"x\":306.75,\"y\":204.75,\"originalY\":198.45703125,\"text\":\"银行盖章：\",\"fontFamily\":\"宋体\",\"fill\":\"#000000\",\"color\":\"#000000\",\"strokeWidth\":\"1\"}]}";
+        try {
+            devices.printer.print(json, function (e) {
+                console.log("打印完成：" + e);
+            });
+        } catch (e) {
+            console.log(devices.printer());
+        }
+    }
+</script>

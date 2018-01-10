@@ -78,25 +78,24 @@ public class MainWindow extends Application {
         engine.getLoadWorker().stateProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     log.info("load page:{}", observable);
-//                    if (Worker.State.SUCCEEDED.equals(newValue)) {
-//                        JSObject jsObject = (JSObject) engine.executeScript("window");
+                    if (Worker.State.SUCCEEDED.equals(newValue)) {
+                        JSObject jsObject = (JSObject) engine.executeScript("window");
 //                        for (JavaScriptObject object : objects) {
 //                            if (object instanceof AbstractJavaScriptObject) {
 //                                ((AbstractJavaScriptObject) object).setEngine(engine);
 //                            }
-//                            jsObject.setMember("controller", new Controller());
 //                            jsObject.setMember(object.getName(), object);
 //                        }
-//                        if (debug) {
-//                            //  webView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
-//                        }
-//                    }
+                        jsObject.setMember("controller", new Controller());
+                        if (debug) {
+                            //  webView.getEngine().executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
+                        }
+                    }
                 });
         engine.setOnError(event -> {
             log.error(event.getMessage(), event);
         });
-        //engine.loadContent("<h1 style=\"font-family: 'YaHei Consolas Hybrid'\">abcABC1234测试</h1>");
-        engine.load(new File("./ui/index.html").toURI().toString());
+        engine.load(MainWindow.class.getResource("/ui/index.html").toString());
         root.getChildren().add(webView);
         primaryStage.setOnCloseRequest(event -> {
             Global.executorService.execute(() -> {

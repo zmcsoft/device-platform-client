@@ -1,6 +1,8 @@
 package com.zmcsoft.apsp.client;
 
+import com.zmcsoft.apsp.client.core.ApplicationConfig;
 import com.zmcsoft.apsp.client.core.Global;
+import com.zmcsoft.apsp.client.http.HttpApiServer;
 import com.zmcsoft.apsp.client.sdk.drivers.DeviceDriverManager;
 import dorkbox.systemTray.MenuItem;
 import dorkbox.systemTray.SystemTray;
@@ -14,17 +16,18 @@ import javafx.stage.Stage;
  * @since 1.0
  */
 public class ClientApplication extends Application {
-    static Stage stage = new Stage();
+    static final Stage stage = new Stage();
 
     public static void main(String[] args) {
-//        Thread thread = new Thread(() -> {
-
+        //开启http server
+        int httpPort = Integer.parseInt(ApplicationConfig.getConfig("api.http-port", "5010"));
+        int wsPort = Integer.parseInt(ApplicationConfig.getConfig("api.ws-port", "5011"));
+        HttpApiServer.start(httpPort, wsPort);
+        //系统托盘
         SystemTray tray = SystemTray.get();
         tray.setImage(ClientApplication.class.getResource("/logo/zmcsoft.jpg"));
         tray.getMenu().add(new MenuItem("设置", e -> {
-            Platform.runLater(() -> {
-                stage.show();
-            });
+            Platform.runLater(stage::show);
         }));
         tray.getMenu().add(new MenuItem("打开主程序", e -> {
             Platform.runLater(MainWindow::show);
@@ -47,26 +50,14 @@ public class ClientApplication extends Application {
                         });
             });
         }));
-
-
-        //});
-        // thread.start();
-
-//        Global.executorService.execute(() -> {
-        //Thread.currentThread().setDaemon(true);
         Platform.setImplicitExit(false);
         Application.launch(ClientApplication.class, args);
-//        });
-
     }
 
     @Override
     public void start(Stage primaryStage) {
-//            Platform.runLater(() -> {
         DeviceDriverManager.class.getName();
         new SettingWindow().start(stage);
         new MainWindow().start(new Stage());
-
-//            });
     }
 }

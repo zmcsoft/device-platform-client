@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>开始使用layui</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style type="text/css">
+        * {
+            padding: 0px;
+            font-size: 16px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-tab layui-tab-card" style="margin-top: 0px;">
+    <ul class="layui-tab-title">
+        <li class="layui-this" style="font-size: 20px">系统状态</li>
+        <li style="font-size: 20px">系统管理</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <div style="height: 500px;font-size: 20px">
+                系统版本：2.0<br>
+                启动时间：2018年01月10日<br>
+                摄像头:<i class="layui-icon" style="font-size: 20px;color: green">&#xe618;</i>
+                打印机:<i class="layui-icon" style="font-size: 20px;color: green">&#xe618;</i>
+                盖章机:<i class="layui-icon" style="font-size: 20px;color: green">&#xe618;</i>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+            <div style="height: 500px">
+                <button class="layui-btn layui-btn-radius">检查更新</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script src="layui/layui.all.js"></script>
+<script type="text/javascript">
+    var element = layui.element;
+</script>

@@ -10,6 +10,10 @@
             if (!call) {
                 return null;
             }
+            if (typeof call !== 'function') {
+                console.warn(call + " is not function")
+                return;
+            }
             return function (e) {
                 call(e.result);
             }
@@ -29,7 +33,7 @@
         Device.call = function (device, provider, action, data, call) {
             var code = Math.round(Math.random() * 10000000);
             var d = JSON.stringify({code: code, device: device, provider: provider, action: action, data: typeof data === 'string' ? data : JSON.stringify(data)});
-            if (socket) {
+            if (socket && socket.readyState === 1) {
                 callbacks[code] = call;
                 socket.send(d)
             } else {
@@ -39,8 +43,7 @@
                     dataType: "json",
                     url: Device.api,
                     async: typeof call !== 'undefined',
-                    data: d
-                    , success: function (e) {
+                    data: d, success: function (e) {
                         if (call) {
                             call(e);
                         }

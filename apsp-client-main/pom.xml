@@ -14,6 +14,16 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>8.8.3</version>
+                <configuration>
+                    <vendor>zmcsoft.com</vendor>
+                    <mainClass>com.zmcsoft.apsp.client.ClientApplication</mainClass>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
@@ -29,6 +39,11 @@
         </plugins>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>com.zmcsoft.apsp</groupId>
+            <artifactId>apsp-client-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.dorkbox</groupId>
             <artifactId>SystemTray</artifactId>
