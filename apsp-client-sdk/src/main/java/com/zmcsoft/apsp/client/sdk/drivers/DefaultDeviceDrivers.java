@@ -20,7 +20,11 @@ public class DefaultDeviceDrivers implements DeviceDrivers, DeviceDriverRegister
     }
 
     private <T extends DeviceDriver> T getDriver(Class<T> type, String provider) {
-        return getProviders(type).get(provider);
+        T driver = getProviders(type).get(provider);
+        if (driver == null) {
+            throw new UnsupportedOperationException("找不到设备驱动:" + provider);
+        }
+        return driver;
     }
 
     @Override
@@ -53,5 +57,10 @@ public class DefaultDeviceDrivers implements DeviceDrivers, DeviceDriverRegister
     @Override
     public <T extends DeviceDriver> void register(Class<T> type, T driver, String provider) {
         getProviders(type).put(provider, driver);
+    }
+
+    @Override
+    public <T extends DeviceDriver> T unregister(Class<T> type, String provider) {
+        return getProviders(type).remove(provider);
     }
 }

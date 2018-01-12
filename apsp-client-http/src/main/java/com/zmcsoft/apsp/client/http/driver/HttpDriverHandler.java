@@ -71,19 +71,22 @@ public class HttpDriverHandler extends WebSocketServer implements HttpHandler {
     String callDevice(String json) {
         log.info("调用设备请求:{}", json);
         DeviceCallResponse response;
+        String requestCode = null;
         try {
-            DeviceCallRequest request = JSON.parseObject(json, DeviceCallRequest.class);
 
+            DeviceCallRequest request = JSON.parseObject(json, DeviceCallRequest.class);
+            requestCode = request.getCode();
             DeviceCallable callable = callableStorage.get(request.getDevice());
             if (null != callable) {
                 response = callable.call(request.getProvider(), request.getAction(), request.getData());
             } else {
                 response = DeviceCallResponse.of(-1, "不支持的设备", null);
             }
-            response.code = request.getCode();
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             response = DeviceCallResponse.of(-2, "请求失败", e.getMessage());
         }
+        response.code = requestCode;
         log.info("调用设备请求完成:{}", response);
         return response.toString();
     }

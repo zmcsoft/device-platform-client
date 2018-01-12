@@ -15,7 +15,6 @@
                     if (e.status === 1) {
                         call.success(e.result);
                     } else {
-                        if (call.error)
                             call.error(e);
                     }
                 }

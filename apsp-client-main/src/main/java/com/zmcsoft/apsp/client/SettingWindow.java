@@ -52,5 +52,4 @@ public class SettingWindow extends Application {
         primaryStage.setAlwaysOnTop(true);
 
     }
-
 }

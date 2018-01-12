@@ -41,18 +41,18 @@ public class DefaultCameraDriver implements CameraDriver {
         DeviceDriverManager.register(register -> {
             register.register(CameraDriver.class, new DefaultCameraDriver(Webcam.getDefault()), DeviceDriverRegister.DEFAULT_DRIVER_PROVIDER);
             for (Webcam webcam : Webcam.getWebcams()) {
-                register.register(CameraDriver.class, new DefaultCameraDriver(webcam), webcam.getName());
+                register.register(CameraDriver.class, new DefaultCameraDriver(webcam), webcam.getDevice().getName());
             }
             Webcam.addDiscoveryListener(new WebcamDiscoveryListener() {
                 @Override
                 public void webcamFound(WebcamDiscoveryEvent webcamDiscoveryEvent) {
                     register.register(CameraDriver.class, new DefaultCameraDriver(Webcam.getDefault()), DeviceDriverRegister.DEFAULT_DRIVER_PROVIDER);
-                    register.register(CameraDriver.class, new DefaultCameraDriver(webcamDiscoveryEvent.getWebcam()), webcamDiscoveryEvent.getWebcam().getName());
+                    register.register(CameraDriver.class, new DefaultCameraDriver(webcamDiscoveryEvent.getWebcam()), webcamDiscoveryEvent.getWebcam().getDevice().getName());
                 }
 
                 @Override
                 public void webcamGone(WebcamDiscoveryEvent webcamDiscoveryEvent) {
-
+                    register.unregister(CameraDriver.class, webcamDiscoveryEvent.getWebcam().getDevice().getName());
                 }
             });
         });
@@ -165,7 +165,7 @@ public class DefaultCameraDriver implements CameraDriver {
                     return outputStream.toByteArray();
                 } catch (IOException e) {
                     log.warn("get camera image error!", e);
-                }finally {
+                } finally {
                     image.flush();
                 }
                 return empty;
