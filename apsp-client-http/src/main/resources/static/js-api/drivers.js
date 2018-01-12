@@ -10,6 +10,16 @@
             if (!call) {
                 return null;
             }
+            if (call.success) {
+                return function (e) {
+                    if (e.status === 1) {
+                        call.success(e.result);
+                    } else {
+                        if (call.error)
+                            call.error(e);
+                    }
+                }
+            }
             if (typeof call !== 'function') {
                 console.warn(call + " is not function")
                 return;
@@ -65,6 +75,9 @@
             };
             Device.getCamera = function (provider) {
                 return {
+                    record: function (call) {
+                        return Device.call("camera", provider, "record", {}, createCallback(call));
+                    },
                     getImageBase64: function (call) {
                         return Device.call("camera", provider, "getImageBase64", {}, createCallback(call));
                     },

@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class JsonPageBuilder extends AbstractPageBuilder {
     @Override
     public List<Pager> build(String config) {
+        config=config.trim();
         List<Object> list = config.startsWith("[")
                 ? JSON.parseArray(config)
                 : Collections.singletonList(JSON.parseObject(config));

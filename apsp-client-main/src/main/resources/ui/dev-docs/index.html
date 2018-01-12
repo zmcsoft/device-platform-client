@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>综合设备管理平台</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../js/default.css">
+    <link rel="stylesheet" href="../js/github-markdown.css">
+
+    <style type="text/css">
+        #header {
+            width: 100%;
+            height: 40px;
+            background: #2e6da4;
+            line-height: 40px;
+            color: white;
+            font-size: 20px;
+            margin-bottom: 60px;
+        }
+
+        #md, #html {
+            height: 510px;
+        }
+
+        #md {
+            resize: none;
+        }
+
+        #html {
+            border: solid 1px darkgrey;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo" style="color: white;font-size: 20px">综合设备管理平台</div>
+    </div>
+
+    <div class="layui-side layui-bg-black" onselectstart="return false">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-this">
+                    <a onclick="showDocs('index')" href="javascript:void(0)">说明</a>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:void(0)">设备驱动开发</a>
+                    <dl class="layui-nav-child">
+                        <dd><a onclick="showDocs('printer')" href="javascript:void(0)">打印机</a></dd>
+                        <dd><a onclick="showDocs('camera')" href="javascript:void(0)">摄像头</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" id="content">
+        <!-- 内容主体区域 -->
+        <div id="printer" style="padding: 15px;">
+            <span class="layui-breadcrumb">
+              <a><cite>设备驱动开发</cite></a>
+              <a><cite>打印机</cite></a>
+            </span>
+            <div id="printer-docs" class="markdown-body">
+
+            </div>
+        </div>
+
+        <div id="camera" style="padding: 15px;">
+            <span class="layui-breadcrumb">
+              <a><cite>设备驱动开发</cite></a>
+              <a><cite>摄像头</cite></a>
+            </span>
+            <div id="camera-docs" class="markdown-body">
+
+            </div>
+        </div>
+
+    </div>
+
+    <!--<div class="layui-footer">-->
+    <!--&lt;!&ndash; 底部固定区域 &ndash;&gt;-->
+    <!--© layui.com - 底部固定区域-->
+    <!--</div>-->
+</div>
+</body>
+</html>
+<script src="../layui/layui.all.js"></script>
+<script src="../js/highlight.js"></script>
+<script src="../js/marked.js"></script>
+
+<script type="text/javascript" src="http://localhost:5010/js-api/drivers.js"></script>
+<script type="text/javascript">
+    var element = layui.element;
+    var $ = jQuery = layui.$;
+    hljs.initHighlightingOnLoad();
+    marked.setOptions({
+        renderer: new marked.Renderer(),
+        highlight: function (code) {
+            return hljs.highlightAuto(code).value;
+        },
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false
+    });
+    $(document).ready(function () {
+        $("#printer-docs").html(marked($("#printer-md").text()));
+        $("#camera-docs").html(marked($("#camera-md").text()));
+    })
+
+    function showDocs(id) {
+        $("#content").children().hide();
+        $("#" + id).show();
+    }
+
+    showDocs('index');
+</script>
+
+<!--打印机相关-->
+
+<script id="printer-md" type="text/x-markdown">
+# 打印机驱动
+引入js文件: `http://localhost:5010/js-api/drivers.js`
+
+```javascript
+  //获取驱动
+  var printer=devices.printer;
+
+  function printPreview() {
+     //打印预览,传入打印数据json,生成base64编码的png图片
+        printer.preview(printJson, {
+            success: function (base64) {
+                $("#preview-image").attr("src", "data:image/png;base64," + base64);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+  //打印
+   function print() {
+        printer.print($(".printPreviewData").val(), {
+            success: function (s) {
+                if(s===true){
+                    //打印完成
+                }
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+
+```
+试一试
+<textarea placeholder="请输入打印数据" class="layui-textarea printPreviewData">
+    [
+        {"layers":[
+           {"type":"rect","x":80,"y":90,"width":180,"height":40},
+            {"type":"text","x":100,"y":100,"color":"#BC6060","text":"测试文字","fontFamily":"宋体","fontSize":"20"},
+            {"type":"line","x1":80,"y1":150,"x2":180,"y2":150},
+           {"type":"img","x":80,"y":155,"imgType":"qrCode","imgData":"综合设备管理平台"},
+           {"type":"img","x":180,"y":155,"width":"200","imgType":"barCode","imgData":"1234567890123456"}
+          ]
+        }
+    ]
+</textarea>
+<button class="layui-btn" onclick="printPreview()">打印预览</button><button class="layui-btn" onclick="print()">打印</button>
+<br>
+<img id="preview-image" style="border: 1px solid gray;width: 210mm">
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<script type="text/javascript">
+    function print() {
+        var printer = devices.printer;
+        printer.print($(".printPreviewData").val(), {
+            success: function (s) {
+
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+
+    function printPreview() {
+        var printer = devices.printer;
+        printer.preview($(".printPreviewData").val(), {
+            success: function (base64) {
+                $("#preview-image").attr("src", "data:image/png;base64," + base64);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+</script>
+
+<!--摄像头相关-->
+<script id="camera-md" type="text/x-markdown">
+# 摄像头驱动
+引入js文件: `http://localhost:5010/js-api/drivers.js`
+
+```javascript
+  //获取驱动
+  var camera=devices.camera;
+  //打开摄像头
+  camera.open(function(success){
+        if(success){
+            //打开成功
+        }
+  });
+  //关闭摄像头
+   camera.close(function(success){
+        if(success){
+            //关闭成功
+        }
+  });
+
+   //拍照
+  function photograph() {
+        camera.getImageBase64({
+            success: function (base64) {
+                $("#camera-image").attr("src", "data:image/png;base64," + base64);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+```
+试一试
+<button class="layui-btn" onclick="devices.camera.open()">打开摄像头</button>
+<button class="layui-btn" onclick="devices.camera.close()">关闭摄像头</button>
+<button class="layui-btn" onclick="photograph()">拍照</button>
+
+<br>
+<img width="400" id="camera-image">
+
+
+
+
+
+
+
+</script>
+<script type="text/javascript">
+    function photograph() {
+        devices.camera.getImageBase64({
+            success: function (base64) {
+                $("#camera-image").attr("src", "data:image/png;base64," + base64);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+</script>

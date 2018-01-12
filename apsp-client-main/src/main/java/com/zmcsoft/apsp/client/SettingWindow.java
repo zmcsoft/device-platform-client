@@ -1,12 +1,8 @@
 package com.zmcsoft.apsp.client;
 
-import com.zmcsoft.apsp.client.core.Global;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
@@ -26,7 +22,7 @@ public class SettingWindow extends Application {
     public void start(Stage primaryStage) {
         StackPane root = new StackPane();
         primaryStage.getIcons().add(new Image(SettingWindow.class.getResource("/logo/zmcsoft.jpg").toString()));
-        primaryStage.setTitle("设置");
+        primaryStage.setTitle("综合设备管理平台");
         root.setPrefHeight(600);
         Scene scene = new Scene(root, 900, 600, Color.web("white"));
         primaryStage.setScene(scene);
@@ -56,4 +52,5 @@ public class SettingWindow extends Application {
         primaryStage.setAlwaysOnTop(true);
 
     }
+
 }
