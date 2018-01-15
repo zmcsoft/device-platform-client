@@ -5,5 +5,5 @@ package com.zmcsoft.apsp.client.sdk.drivers;
  * @since 1.0
  */
 public interface DeviceDriver {
-
+    String getName();
 }

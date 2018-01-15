@@ -12,6 +12,11 @@ import java.util.function.Consumer;
  * @since 1.0
  */
 public interface CameraDriver extends DeviceDriver {
+    @Override
+    default String getName() {
+        return "camera";
+    }
+
     /**
      * 摄像头是否已经打开
      *

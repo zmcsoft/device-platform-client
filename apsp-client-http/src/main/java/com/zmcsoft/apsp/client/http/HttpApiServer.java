@@ -7,6 +7,7 @@ import com.zmcsoft.apsp.client.core.ApplicationConfig;
 import com.zmcsoft.apsp.client.core.Global;
 import com.zmcsoft.apsp.client.http.driver.HttpDriverHandler;
 import com.zmcsoft.apsp.client.http.jsapi.JSHandler;
+import com.zmcsoft.apsp.client.http.monitor.WebsocketDeviceMonitor;
 import javafx.application.Application;
 import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.WebSocketImpl;
@@ -77,6 +78,7 @@ public class HttpApiServer {
             handler.start();
             HttpApiServer.server = server;
             HttpApiServer.socketServer = handler;
+            WebsocketDeviceMonitor.startMonitor(ApplicationConfig.getConfig("monitor.url", "http://localhost:8080/socket"));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

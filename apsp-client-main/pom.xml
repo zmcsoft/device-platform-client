@@ -21,6 +21,9 @@
                     <vendor>zmcsoft.com</vendor>
                     <mainClass>com.zmcsoft.apsp.client.ClientApplication</mainClass>
                     <verbose>true</verbose>
+                    <appName>${project.name}</appName>
+                    <identifier>${project.name}</identifier>
+                    <jfxMainAppJarName>${build.finalName}.jar</jfxMainAppJarName>
                 </configuration>
             </plugin>
             <plugin>

@@ -10,6 +10,4 @@ public interface DeviceDriverRegister {
     <T extends DeviceDriver> void register(Class<T> type, T driver, String provider);
 
     <T extends DeviceDriver> T unregister(Class<T> type, String provider);
-
-
 }
