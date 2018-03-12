@@ -9,7 +9,9 @@ import com.ochafik.lang.jnaerator.JNAerator;
 public class JNAeratorTests {
     public static void main(String[] args) {
         JNAerator.main(new String[]{
-                "./drivers/card/K2616_Dll.dll","./drivers/card/K2616_Dll.h", "-o", "target", "-mode", "Directory", "-runtime", "JNA"
+             //   "./drivers/card/K2616_Dll.dll","./drivers/card/K2616_Dll.h", "-o", "target", "-mode", "Directory", "-runtime", "JNA"
+              //  "./drivers/identity/mtx_32.dll","./drivers/identity/mtx_32.h", "-o", "target", "-mode", "Directory", "-runtime", "JNA"
+                "./drivers/iccrad/56iccdll.dll","./drivers/iccrad/56iccdll.h", "-o", "target", "-mode", "Directory", "-runtime", "JNA"
         });
     }
 }

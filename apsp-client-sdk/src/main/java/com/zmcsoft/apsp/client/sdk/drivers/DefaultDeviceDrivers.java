@@ -1,7 +1,15 @@
 package com.zmcsoft.apsp.client.sdk.drivers;
 
 import com.zmcsoft.apsp.client.sdk.drivers.camera.CameraDriver;
+import com.zmcsoft.apsp.client.sdk.drivers.multiple.iccard.ICCradDriver;
+import com.zmcsoft.apsp.client.sdk.drivers.multiple.idcard.IdentityDriver;
+import com.zmcsoft.apsp.client.sdk.drivers.ms.MSIcDriver;
+import com.zmcsoft.apsp.client.sdk.drivers.multiple.contact.ContactIcDriver;
+import com.zmcsoft.apsp.client.sdk.drivers.multiple.device.MultipleDeviceDriver;
+import com.zmcsoft.apsp.client.sdk.drivers.multiple.notcontact.NotContactIcDriver;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.PrinterDriver;
+import com.zmcsoft.apsp.client.sdk.drivers.softkeyboard.SoftKeyBoardDriver;
+import com.zmcsoft.apsp.client.sdk.drivers.voice.VoiceDriver;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +45,16 @@ public class DefaultDeviceDrivers implements DeviceDrivers, DeviceDriverRegister
         return getDriver(PrinterDriver.class, DEFAULT_DRIVER_PROVIDER);
     }
 
+    @Override
+    public VoiceDriver voice() {
+        return getDriver(VoiceDriver.class, DEFAULT_DRIVER_PROVIDER);
+    }
+
+    @Override
+    public SoftKeyBoardDriver softKeyBoard() {
+        return getDriver(SoftKeyBoardDriver.class, DEFAULT_DRIVER_PROVIDER);
+    }
+
     protected String checkProvider(String provider) {
         if (null == provider || provider.isEmpty()) {
             return DEFAULT_DRIVER_PROVIDER;
@@ -52,6 +70,76 @@ public class DefaultDeviceDrivers implements DeviceDrivers, DeviceDriverRegister
     @Override
     public PrinterDriver printer(String provider) {
         return getDriver(PrinterDriver.class, checkProvider(provider));
+    }
+
+    @Override
+    public SoftKeyBoardDriver softKeyBoard(String provider) {
+        return getDriver(SoftKeyBoardDriver.class, checkProvider(provider));
+    }
+
+    @Override
+    public VoiceDriver voice(String provider) {
+        return getDriver(VoiceDriver.class, checkProvider(provider));
+    }
+
+    @Override
+    public IdentityDriver identity() {
+        return getDriver(IdentityDriver.class, DEFAULT_DRIVER_PROVIDER);
+    }
+
+    @Override
+    public IdentityDriver identity(String provider) {
+        return getDriver(IdentityDriver.class, checkProvider(provider));
+    }
+
+    @Override
+    public MSIcDriver mSIcCard() {
+        return getDriver(MSIcDriver.class, DEFAULT_DRIVER_PROVIDER);
+    }
+
+    @Override
+    public MSIcDriver mSIcCard(String provider) {
+        return getDriver(MSIcDriver.class, checkProvider(provider));
+    }
+
+    @Override
+    public MultipleDeviceDriver multipleDeviceDriver() {
+        return getDriver(MultipleDeviceDriver.class, DEFAULT_DRIVER_PROVIDER);
+    }
+
+    @Override
+    public MultipleDeviceDriver multipleDeviceDriver(String provider) {
+        return getDriver(MultipleDeviceDriver.class, checkProvider(provider));
+    }
+
+    @Override
+    public ContactIcDriver contactIcDriver() {
+        return getDriver(ContactIcDriver.class, DEFAULT_DRIVER_PROVIDER);
+    }
+
+    @Override
+    public ContactIcDriver contactIcDriver(String provider) {
+        return getDriver(ContactIcDriver.class, checkProvider(provider));
+    }
+
+    @Override
+    public NotContactIcDriver notContactIcDriver() {
+        return getDriver(NotContactIcDriver.class, DEFAULT_DRIVER_PROVIDER);
+    }
+
+    @Override
+    public NotContactIcDriver notContactIcDriver(String provider) {
+        return getDriver(NotContactIcDriver.class, checkProvider(provider));
+    }
+
+    @Override
+    public ICCradDriver iCCradDriver() {
+        return getDriver(ICCradDriver.class, DEFAULT_DRIVER_PROVIDER);
+    }
+
+    @Override
+    public ICCradDriver iCCradDriver(String provider) {
+        return getDriver(ICCradDriver.class, checkProvider(provider));
     }
 
     @Override

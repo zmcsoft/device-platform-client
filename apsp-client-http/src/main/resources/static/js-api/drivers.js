@@ -92,8 +92,27 @@
                 }
             };
 
+            Device.getIdentity = function (provider) {
+                return {
+                    getIDCradInfo: function (call) {
+                        return Device.call("identity", provider, "getIDCradInfo", {}, createCallback(call));
+                    }
+                }
+            };
+            Device.getICCard = function (provider) {
+                return {
+                    getICCardInfo: function (call) {
+                        return Device.call("iCCard", provider, "getICCardInfo", {}, createCallback(call));
+                    },
+                    getICCardInfoAnd55: function (call) {
+                        return Device.call("iCCard", provider, "getICCardInfoAnd55", {}, createCallback(call));
+                    }
+                }
+            };
             Device.printer = Device.getPrinter();
             Device.camera = Device.getCamera();
+            Device.iCCard = Device.getICCard();
+            Device.identity = Device.getIdentity();
 
         }
         if (window.define) {

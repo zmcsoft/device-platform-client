@@ -50,6 +50,8 @@
                     <dl class="layui-nav-child">
                         <dd><a onclick="showDocs('printer')" href="javascript:void(0)">打印机</a></dd>
                         <dd><a onclick="showDocs('camera')" href="javascript:void(0)">摄像头</a></dd>
+                        <dd><a onclick="showDocs('identity')" href="javascript:void(0)">身份证</a></dd>
+                        <dd><a onclick="showDocs('iCCard')" href="javascript:void(0)">IC卡</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -82,6 +84,25 @@
               <a><cite>摄像头</cite></a>
             </span>
             <div id="camera-docs" class="markdown-body">
+
+            </div>
+        </div>
+
+        <div id="identity" style="padding: 15px;">
+            <span class="layui-breadcrumb">
+              <a><cite>设备驱动开发</cite></a>
+              <a><cite>身份证</cite></a>
+            </span>
+            <div id="identity-docs" class="markdown-body">
+
+            </div>
+        </div>
+        <div id="iCCard" style="padding: 15px;">
+            <span class="layui-breadcrumb">
+              <a><cite>设备驱动开发</cite></a>
+              <a><cite>IC卡</cite></a>
+            </span>
+            <div id="iCCard-docs" class="markdown-body">
 
             </div>
         </div>
@@ -121,6 +142,8 @@
         $("#printer-docs").html(marked($("#printer-md").text()));
         $("#camera-docs").html(marked($("#camera-md").text()));
         $("#index-docs").html(marked($("#index-md").text()));
+        $("#identity-docs").html(marked($("#identity-md").text()));
+        $("#iCCard-docs").html(marked($("#iCCard-md").text()));
     })
 
     function showDocs(id) {
@@ -397,6 +420,140 @@ printer.print(data,{
         devices.camera.getImageBase64({
             success: function (base64) {
                 $("#camera-image").attr("src", "data:image/png;base64," + base64);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+</script>
+
+
+
+<!--身份证相关-->
+<script id="identity-md" type="text/x-markdown">
+# 身份证读取驱动
+功能列表:
+
+| 方法        |   回调数据  |
+| -------------: | :-----:      |
+| getIDCradInfo(callback) | 身份证对象实体 |
+
+## 例子
+```javascript
+  //获取驱动
+  var identity=devices.identity;
+
+   //获取身份证信息
+  function getIdentityInfo() {
+        identity.getIDCradInfo({
+            success: function (result) {
+                $("#identity-result").html(result);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+```
+试一试
+<button class="layui-btn" onclick="getIdentityInfo()">获取身份证信息</button>
+
+<br>
+<div id="identity-result"></div>
+
+
+
+
+
+
+
+
+</script>
+<script type="text/javascript">
+    function getIdentityInfo() {
+        devices.identity.getIDCradInfo({
+            success: function (result) {
+                //alert(result);
+                $("#identity-result").html(result);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+</script>
+<!--IC卡相关-->
+<script id="iCCard-md" type="text/x-markdown">
+# IC卡读取驱动
+功能列表:
+
+| 方法        |   回调数据  |
+| -------------: | :-----:      |
+| getICCardInfo(callback) | IC卡对象实体 |
+| getICCardInfoAnd55(callback) | IC卡对象实体 |
+
+## 例子
+```javascript
+  //获取驱动
+  var iCCard=devices.iCCard;
+
+   //获取IC卡信息
+  function getICCardInfo() {
+        iCCard.getICCardInfo({
+            success: function (result) {
+                $("#iCCard-result").html(result);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+  //获取IC卡和55域信息
+  function getICCardInfoAnd55() {
+        iCCard.getICCardInfoAnd55({
+            success: function (result) {
+                $("#iCCard-result").html(result);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+```
+试一试
+<button class="layui-btn" onclick="getICCardInfo()">获取IC卡信息</button>
+<button class="layui-btn" onclick="getICCardInfoAnd55()">获取IC卡和55域信息</button>
+
+<br>
+<div id="iCCard-result"></div>
+
+
+
+
+
+
+</script>
+<script type="text/javascript">
+    //获取驱动
+    var iCCard=devices.iCCard;
+
+    //获取IC卡信息
+    function getICCardInfo() {
+        iCCard.getICCardInfo({
+            success: function (result) {
+                $("#iCCard-result").html(result);
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+    }
+    //获取IC卡和55域信息
+    function getICCardInfoAnd55() {
+        iCCard.getICCardInfoAnd55({
+            success: function (result) {
+                $("#iCCard-result").html(result);
             },
             error: function (msg) {
                 alert(msg);

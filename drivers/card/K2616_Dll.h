@@ -1,13 +1,13 @@
 /////////////////////////////////////////////////////////////////
-//////////////////// DLLÄÚ²¿´íÎóË÷Òý/////////////////////////////
+//////////////////// DLL???????????/////////////////////////////
 //CommOpen(101-104)
-#define Bad_CommOpen -101//¶Ë¿Ú´ò¿ª´í.
-#define Bad_CommSet -102//¶Ë¿Ú²ÎÊýÉèÖÃ´í,(102)»¹´ú±íCommSetº¯Êý´í
+#define Bad_CommOpen -101//?????.
+#define Bad_CommSet -102//???????????,(102)??????CommSet??????
 
 #define Bad_CommTimeouts -999
 #define Bad_CommQueue -998
 //CommClose(105)
-#define Bad_CommClose -105//¶Ë¿Ú¹Ø±Õ´í.
+#define Bad_CommClose -105//??????.
 
 //Send(106)
 #define Bad_SendByte -106
@@ -17,34 +17,34 @@
 #define Bad_ReceiveData_ReadFile -103
 #define Bad_ReceiveData_Len -104
 
-// ¹«¹²´íÎó
-#define Bad_Parameter -200//´«Èë²ÎÊý´íÎó(³¬Ô½¶¨Òå)
+// ????????
+#define Bad_Parameter -200//???????????(???????)
 
 
-/**********´íÎó´úÂë*********/
-#define CardBoxEmpty				0xA0//¿¨¿Õ
-#define CardJam						0xA2//¿¨Æ¬¶ÂÈû
-#define RecycleBoxFull				0xA1//»ØÊÕÏä¿¨Âú
-#define RecycleBoxNotInPosition		0xA3//»ØÊÕÏä¿¨Âú
-#define CardBoxNotInPosition		0xA4//·¢¿¨Ïä²»µ½Î»
-#define HookMoveBox1NotEmpty		0xA7//¿¨Ïä1 2¶¼ÓÐ¿¨£¬¿¨¹³²»ÄÜ´Ó¿¨Ïä2ÒÆ¶¯,ÇëÈ¡³ö¿¨Ïä£¬ÖØÆôÉè±¸»òÖ´ÐÐ¸´Î»ÃüÁî
-#define HookMoveTimeOut				0xA8//¿¨¹³×ßÎ»´«¸ÐÆ÷Ã»¼ì²âµ½¿¨¹³ÒýÆð³¬Ê±
-#define MoverMoveError				0xAE//ÒÆ¶¯Æ½Ì¨ÒÆ¶¯Ê§°Ü
-#define PlatformWaitCard			0xAF//Æ½Ì¨µÈ´ý¿¨Æ¬³¬Ê±
-#define PlatformFlipCard			0xB0//Æ½Ì¨µ¯¿¨Ê§°Ü
-#define Hook1MoveFail        		0xB1//ÒÆ¶¯¿¨¹³1Ê§°Ü
-#define Hook2MoveFail        		0xB2//ÒÆ¶¯¿¨¹³2Ê§°Ü
-#define CardIsInPlatform			0xB3//¿¨Æ¬ÔÚÆ½Ì¨ÉÏ,²»ÄÜÖ´ÐÐ´Ó¿¨Ïä·¢¿¨»ò¶Á¿¨Æ÷ÖÐ»ØÊÕ¶¯×÷
-#define SendCardToPlatformFail		0xB4//·¢¿¨µ½Æ½Ì¨Ê§°Ü
-#define CardIsNotInPlatform			0xB5//Æ½Ì¨ÉÏÎÞ¿¨£¬²»ÄÜÖ´ÐÐ»ØÊÕ»ò·¢¿¨µ½¶Á¿¨Æ÷
-#define SendCardFailed				0xC6//·¢¿¨Ê§°Ü
-#define RecyclePlatformCard			0xC7//»ØÊÕÒÆ¶¯Æ½Ì¨ÉÏÃæµÄ¿¨Æ¬
-#define RecycleCardFailed			0xC8//»ØÊÕÊ§°Ü£¬¿¨Æ¬»¹ÔÚÒÆ¶¯Æ½Ì¨ÉÏÃæ
-#define HaveCardAndSendCardFailed	0xC9//¶Á¿¨Æ÷ÄÚ²¿ÓÐ¿¨£¬²»ÄÜ·¢¿¨
-#define HaveNoCardRecycleCardFailed	0xCA//¶Á¿¨Æ÷ÄÚ²¿ºÍÒÆ¶¯Æ½Ì¨ÎÞ¿¨£¬²»ÄÜ»ØÊÕ
+/**********???????*********/
+#define CardBoxEmpty				0xA0//????
+#define CardJam						0xA2//???????
+#define RecycleBoxFull				0xA1//?????ä¿¨??
+#define RecycleBoxNotInPosition		0xA3//?????ä¿¨??
+#define CardBoxNotInPosition		0xA4//????????Î»
+#define HookMoveBox1NotEmpty		0xA7//????1 2???Ð¿???????????????2???,??????????????è±¸????Ð¸?Î»????
+#define HookMoveTimeOut				0xA8//??????Î»???????????????????
+#define MoverMoveError				0xAE//???????????
+#define PlatformWaitCard			0xAF//???????????
+#define PlatformFlipCard			0xB0//?????????
+#define Hook1MoveFail        		0xB1//???????1???
+#define Hook2MoveFail        		0xB2//???????2???
+#define CardIsInPlatform			0xB3//?????????,??????Ð´??????????????Ð»??????
+#define SendCardToPlatformFail		0xB4//???????????
+#define CardIsNotInPlatform			0xB5//???????????????Ð»?????????????
+#define SendCardFailed				0xC6//???????
+#define RecyclePlatformCard			0xC7//????????????????
+#define RecycleCardFailed			0xC8//????????????????????????
+#define HaveCardAndSendCardFailed	0xC9//??????????Ð¿??????????
+#define HaveNoCardRecycleCardFailed	0xCA//????????????????????????????
 
 //######################################################//
-//==================º¯ÊýËµÃ÷===========================//
+//==================???????===========================//
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++//
 HANDLE __stdcall K2616_CommOpen(char *Port);
 HANDLE __stdcall K2616_CommOpenWithBaud(char *Port, unsigned int _data);
@@ -57,7 +57,7 @@ int __stdcall K2616_CheckCardPosition(HANDLE ComHandle, BYTE _Position[]);
 int __stdcall K2616_CheckSensorStates(HANDLE ComHandle, BYTE _States[]);
 int __stdcall K2616_CheckSensorVoltage(HANDLE ComHandle, BYTE _Valtage[]);
 int __stdcall K2616_EnterCard(HANDLE ComHandle,BYTE EnterType,DWORD WaitTime);
-int __stdcall K2616_EnterCardUntime(HANDLE ComHandle, BYTE EnterType);//;;;½ø¿¨Á¢¼´·µ»Ø
+int __stdcall K2616_EnterCardUntime(HANDLE ComHandle, BYTE EnterType);//;;;????????????
 int __stdcall K2616_MoveCard(HANDLE ComHandle, BYTE _PM);
 int __stdcall K2616_AutoTestICCard(HANDLE ComHandle, BYTE *_IcCardType);
 int __stdcall K2616_AutoTestRFIDCard(HANDLE ComHandle, BYTE *_RFIDCardType);

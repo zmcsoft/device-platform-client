@@ -2,6 +2,7 @@ package com.zmcsoft.apsp.client.sdk.drivers;
 
 import com.zmcsoft.apsp.client.core.Global;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -45,10 +46,18 @@ public class DeviceDriverManager {
         });
     }
 
-    static {
+   static {
         String[] drivers = {
                 "com.zmcsoft.apsp.client.sdk.drivers.printer.DefaultPrinterDriver",
-                "com.zmcsoft.apsp.client.sdk.drivers.camera.DefaultCameraDriver"
+                "com.zmcsoft.apsp.client.sdk.drivers.camera.DefaultCameraDriver",
+                "com.zmcsoft.apsp.client.sdk.drivers.voice.DefaultVoiceDriver",
+                "com.zmcsoft.apsp.client.sdk.drivers.multiple.idcard.DefaultIdentityDriver",
+                "com.zmcsoft.apsp.client.sdk.drivers.multiple.device.DefaultMultipleDeviceDriver",
+                "com.zmcsoft.apsp.client.sdk.drivers.multiple.contact.DefaultContactIcDriver",
+                "com.zmcsoft.apsp.client.sdk.drivers.multiple.notcontact.DefaultNotContactIcDriver",
+                "com.zmcsoft.apsp.client.sdk.drivers.multiple.iccard.DefaultICCradDriver",
+                "com.zmcsoft.apsp.client.sdk.drivers.softkeyboard.DefaultKeyBoardDriver",
+                "com.zmcsoft.apsp.client.sdk.drivers.ms.DefaultMSIcDriver"
         };
         for (String driver : drivers) {
             try {

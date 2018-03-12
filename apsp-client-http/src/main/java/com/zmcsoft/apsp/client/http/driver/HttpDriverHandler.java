@@ -5,6 +5,8 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.zmcsoft.apsp.client.core.DeviceCallResponse;
+import com.zmcsoft.apsp.client.http.driver.ICCard.ICCardCallable;
+import com.zmcsoft.apsp.client.http.driver.IDCard.IDCardCallable;
 import com.zmcsoft.apsp.client.http.driver.camera.CameraCallable;
 import com.zmcsoft.apsp.client.http.driver.printer.PrinterCallable;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,8 @@ public class HttpDriverHandler extends WebSocketServer implements HttpHandler {
     static {
         callableStorage.put("printer", new PrinterCallable());
         callableStorage.put("camera", new CameraCallable());
+        callableStorage.put("identity", new IDCardCallable());
+        callableStorage.put("iCCard", new ICCardCallable());
     }
 
     public HttpDriverHandler(InetSocketAddress address) {
