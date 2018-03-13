@@ -67,6 +67,9 @@
                     preview: function (data, call) {
                         Device.call("printer", provider, "preview", (typeof data === 'object' ? JSON.stringify(data) : data), createCallback(call));
                     },
+                    previewSVG: function (data, call) {
+                        Device.call("printer", provider, "previewSVG", (typeof data === 'object' ? JSON.stringify(data) : data), createCallback(call));
+                    },
                     print: function (data, call) {
                         Device.call("printer", provider, "print", (typeof data === 'object' ? JSON.stringify(data) : data), createCallback(call));
                     }

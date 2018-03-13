@@ -221,6 +221,7 @@ printer.print(data,{
 | 方法        |   回调数据  |
 | -------------: | :-----:      |
 | preview(json,callback) | png格式图片的base64字符串 |
+| previewSVG(json,callback) | 预览返回svg数据,格式为array |
 | print(json,callback)   |  true or false |
 
 
@@ -317,7 +318,7 @@ printer.print(data,{
 </textarea>
 <button class="layui-btn" onclick="printPreview()">打印预览</button><button class="layui-btn" onclick="print()">打印</button>
 <br>
-<img id="preview-image" style="border: 1px solid gray;width: 210mm">
+<div id="preview-image" style="border: 1px solid gray;width: 210mm;height:297mm">
 
 
 
@@ -347,9 +348,12 @@ printer.print(data,{
 
     function printPreview() {
         var printer = devices.printer;
-        printer.preview($(".printPreviewData").val(), {
-            success: function (base64) {
-                $("#preview-image").attr("src", "data:image/png;base64," + base64);
+        printer.previewSVG($(".printPreviewData").val(), {
+            success: function (svgArr) {
+                $("#preview-image").html("");
+                $(svgArr).each(function () {
+                    $("#preview-image").append(this);
+                })
             },
             error: function (msg) {
                 alert(msg);

@@ -38,6 +38,36 @@
             <artifactId>hsweb-expands-shell</artifactId>
             <version>${hsweb.expands.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-svggen</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-ext -->
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-ext</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder -->
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>1.9</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/fop -->
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>fop</artifactId>
+            <version>2.2</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.hynnet/jacob -->
         <!--<dependency>-->
             <!--<groupId>com.hynnet</groupId>-->

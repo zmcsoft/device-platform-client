@@ -21,6 +21,9 @@ public class ImageLayer extends AbstractLayer {
 
     @Override
     protected void doDraw(Graphics2D graphics) {
+        if(image==null){
+            return;
+        }
         graphics.drawImage(image, getX(), getY(), getWidth(), getHeight(), (img, infoflags, x, y, w, h) -> true);
     }
 }

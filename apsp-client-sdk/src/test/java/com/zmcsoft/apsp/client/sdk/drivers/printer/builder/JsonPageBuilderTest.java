@@ -2,6 +2,7 @@ package com.zmcsoft.apsp.client.sdk.drivers.printer.builder;
 
 import com.zmcsoft.apsp.client.sdk.drivers.printer.*;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.executor.DefaultPrintable;
+import org.apache.batik.transcoder.TranscoderException;
 
 import javax.imageio.ImageIO;
 import javax.print.*;
@@ -9,6 +10,7 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.standard.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,8 +22,12 @@ import java.util.List;
  */
 public class JsonPageBuilderTest {
 
-    public static void main(String[] args) throws PrintException, IOException {
-        String json = "{\"layers\":[{\"type\":\"rect\",\"rp\":\"rp72\",\"x\":83,\"y\":218,\"width\":440,\"height\":440.00001525878906,\"fill\":\"rgba(0,0,0,0)\",\"color\":\"#ff0000\",\"strokeWidth\":\"1\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"line\",\"rp\":\"rp72\",\"x1\":87,\"y1\":414,\"x2\":523,\"y2\":414,\"color\":\"#ff0000\",\"strokeWidth\":\"1\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"line\",\"rp\":\"rp72\",\"x1\":306,\"y1\":220,\"x2\":306,\"y2\":654,\"color\":\"#ff0000\",\"strokeWidth\":\"1\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"img\",\"rp\":\"rp72\",\"x\":325,\"y\":241,\"width\":176,\"height\":148,\"fill\":\"rgba(184,184,184,1)\",\"imgData\":\"erweima\",\"imgType\":\"qrCode\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"img\",\"rp\":\"rp72\",\"x\":98,\"y\":436,\"width\":170,\"height\":177,\"fill\":\"rgba(184,184,184,1)\",\"imgData\":\"file:D:/test.jpg\",\"imgType\":\"static\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"img\",\"rp\":\"rp72\",\"x\":99,\"y\":247,\"width\":159,\"height\":141,\"fill\":\"rgba(184,184,184,1)\",\"imgData\":\"tiaoxingma\",\"imgType\":\"barCode\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"img\",\"rp\":\"rp72\",\"x\":323,\"y\":445,\"width\":182,\"height\":188,\"fill\":\"rgba(184,184,184,1)\",\"imgData\":\"\",\"imgType\":\"static\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"img\",\"rp\":\"rp72\",\"x\":191,\"y\":48,\"width\":231,\"height\":135,\"fill\":\"rgba(184,184,184,1)\",\"imgData\":\"\",\"imgType\":\"code\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"}]}";
+    public static void main(String[] args) throws PrintException, IOException, TranscoderException {
+        String json = "{\"layers\":[{\"type\":\"rect\",\"rp\":\"rp72\",\"x\":83,\"y\":218,\"width\":440,\"height\":440.00001525878906,\"fill\":\"rgba(0,0,0,0)\",\"color\":\"#ff0000\",\"strokeWidth\":\"1\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"line\",\"rp\":\"rp72\",\"x1\":87,\"y1\":414,\"x2\":523,\"y2\":414,\"color\":\"#ff0000\",\"strokeWidth\":\"1\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"line\",\"rp\":\"rp72\",\"x1\":306,\"y1\":220,\"x2\":306,\"y2\":654,\"color\":\"#ff0000\",\"strokeWidth\":\"1\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"img\",\"rp\":\"rp72\",\"x\":325,\"y\":241,\"width\":176,\"height\":148,\"fill\":\"rgba(184,184,184,1)\",\"imgData\":\"erweima\",\"imgType\":\"qrCode\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"}" +
+//                ",{\"type\":\"img\",\"rp\":\"rp72\",\"x\":98,\"y\":436,\"width\":170,\"height\":177,\"fill\":\"rgba(184,184,184,1)\",\"imgData\"" +
+//                ":\"file:D:/test.jpg\",\"imgType\":\"static\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"" +
+//                "\",\"visible\":\"\"}" +
+                ",{\"type\":\"img\",\"rp\":\"rp72\",\"x\":99,\"y\":247,\"width\":159,\"height\":141,\"fill\":\"rgba(184,184,184,1)\",\"imgData\":\"tiaoxingma\",\"imgType\":\"barCode\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"img\",\"rp\":\"rp72\",\"x\":323,\"y\":445,\"width\":182,\"height\":188,\"fill\":\"rgba(184,184,184,1)\",\"imgData\":\"\",\"imgType\":\"static\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"},{\"type\":\"img\",\"rp\":\"rp72\",\"x\":191,\"y\":48,\"width\":231,\"height\":135,\"fill\":\"rgba(184,184,184,1)\",\"imgData\":\"\",\"imgType\":\"code\",\"loopDirection\":\"\",\"loopSpacing\":0,\"loopData\":\"\",\"loopNum\":\"\",\"visible\":\"\"}]}";
 
         json = "[" + json + "," + json + "]";
 
@@ -31,6 +37,37 @@ public class JsonPageBuilderTest {
 
         command.setPaper(new PixelPaper(72, Paper.A4));
         BufferedImage image = PrinterUtils.graphicsToImage(pager, new PixelPaper(72, Paper.A4));
+        String svg = "<?xml version=\"1.0\"?>\n" +
+                "<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.0//EN'\n" +
+                "        'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>\n" +
+                "<svg fill-opacity=\"1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" color-rendering=\"auto\" color-interpolation=\"auto\" " +
+                "text-rendering=\"auto\" stroke=\"black\" stroke-linecap=\"square\" stroke-miterlimit=\"10\" shape-rendering=\"auto\" " +
+                "stroke-opacity=\"1\" fill=\"black\" stroke-dasharray=\"none\" font-weight=\"normal\" stroke-width=\"1\" xmlns=\"http://www.w3.org/2000/svg\" " +
+                " stroke-linejoin=\"miter\" font-size=\"12px\" stroke-dashoffset=\"0\" image-rendering=\"auto\"\n" +
+                "><!--Generated by the Batik Graphics2D SVG Generator--><defs id=\"genericDefs\"\n" +
+                "/><g\n" +
+                "><g text-rendering=\"geometricPrecision\" color-rendering=\"optimizeQuality\"\n" +
+                "><rect fill=\"none\" x=\"80\" width=\"180\" height=\"40\" y=\"90\"\n" +
+                "/><text font-family=\"微软雅黑\" fill=\"rgb(188,96,96)\" x=\"100\" xml:space=\"preserve\" font-size=\"20px\" y=\"120\" stroke=\"none\"\n" +
+                "      >测试文字</text\n" +
+                "      ><line y2=\"150\" fill=\"none\" x1=\"80\" x2=\"180\" y1=\"150\"\n" +
+                "/><image preserveAspectRatio=\"none\" x=\"80\" width=\"100\" y=\"155\" height=\"100\" xlink:href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkAQAAAABYmaj5AAAA70lEQVR42tXUMQ6D\n" +
+                "MAwFUCOGbPQClrgGG1fCFyDlBL1StlwjUi9AtgxRXadUiAWcsY0Y8gYUf8cK8GGt\n" +
+                "8MNaAeYRyUGjKXImztbLRpPDeQDyQDUy2NSJGKlGnD8n7JWdSvKRP6Y9lazXIBH3\n" +
+                "Dp4qeskXiPuHptXw3eTJIGmKKXeAnclWE6fnI+Ubb/9dSfJ1Y6C0T8Gp2LUrhBn6\n" +
+                "qCl6aUMAE6ymlym1TON2Y1eKLpBv7/CdwQuVaod2YfkUST7r+sXjTVMsQ40Ngy6H\n" +
+                "04AAaCtk3eecCpGUXDqnSWpJuSnXq6jMNYdu5EXTv7xgR70B34ywYoQTwU4AAAAA\n" +
+                "SUVORK5CYII=\"\n" +
+                "/><image preserveAspectRatio=\"none\" x=\"180\" width=\"200\" y=\"155\" height=\"100\" xlink:href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAABkAQAAAADr/UKmAAAANElEQVR42mP4DwR/\n" +
+                "Ni4z97Pyj+T0yZtTMsu4qx4kyDAqMyozKjMqMyozKjMqMyozKjOCZQACQ//YZ/0W\n" +
+                "YwAAAABJRU5ErkJggg==\"\n" +
+                "/></g\n" +
+                "></g\n" +
+                "></svg\n" +
+                ">\n";//PrinterUtils.graphicsToSvg(pager).get(0);
+        System.out.println(svg);
+        PrinterUtils.svg2pdf(svg,new FileOutputStream("./target/test.pdf"));
+
         if (ImageIO.write(image, "png", new File("./target/preview.png"))) {
             return;
         }

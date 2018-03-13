@@ -39,6 +39,8 @@ public class PrinterCallable implements DeviceCallable {
                     return DeviceCallResponse.of(500, "创建预览失败", e.getMessage());
                 }
                 return DeviceCallResponse.success(Base64.encodeBase64String(stream.toByteArray()));
+            case "previewSVG":
+                return DeviceCallResponse.success(PrinterUtils.graphicsToSvg(pagers));
             case "print":
                 print(provider, pagers);
                 return DeviceCallResponse.success(true);

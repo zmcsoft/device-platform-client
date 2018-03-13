@@ -3,6 +3,7 @@ package com.zmcsoft.apsp.client.sdk.drivers.printer.layer;
 import com.zmcsoft.apsp.client.sdk.drivers.printer.Layer;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
 
@@ -12,6 +13,7 @@ import java.awt.*;
  */
 @Getter
 @Setter
+@Slf4j
 public abstract class AbstractLayer implements Layer {
     private Color color = Color.BLACK;
 
@@ -31,7 +33,11 @@ public abstract class AbstractLayer implements Layer {
         if (font != null) {
             graphics.setFont(font);
         }
-        doDraw(graphics);
+        try {
+            doDraw(graphics);
+        } catch (Exception e) {
+            log.error("绘制打印内容失败", this, e);
+        }
         graphics.setColor(oldColor);
         graphics.setFont(oldFont);
     }
