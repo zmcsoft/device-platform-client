@@ -1,5 +1,7 @@
 package com.zmcsoft.apsp.client.sdk.drivers.printer;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGConverter;
 import org.apache.batik.svggen.SVGGraphics2D;
@@ -7,13 +9,20 @@ import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.apache.batik.transcoder.*;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.apache.fop.fonts.FontInfo;
+import org.apache.fop.svg.PDFDocumentGraphics2D;
+import org.apache.fop.svg.PDFDocumentGraphics2DConfigurator;
+import org.apache.fop.svg.PDFGraphics2D;
 import org.apache.fop.svg.PDFTranscoder;
+import org.apache.xmlgraphics.java2d.GraphicContext;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -40,37 +49,50 @@ public class PrinterUtils {
         g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
         g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
     }
 
-    public static void svg2pdf(String svg, OutputStream out) throws TranscoderException {
-        TranscoderInput input = new TranscoderInput(new StringReader(svg));
-        TranscoderOutput output = new TranscoderOutput(out);
-        PDFTranscoder transcoder = new PDFTranscoder();
-        transcoder.addTranscodingHint(KEY_WIDTH, 800f);
-        transcoder.addTranscodingHint(KEY_HEIGHT, 1200f);
-        transcoder.addTranscodingHint(KEY_AUTO_FONTS, true);
-        final int dpi = 300;
-        transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, 25.4f / dpi);
-        transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
-        transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
-        transcoder.transcode(input, output);
+    public static void graphicsToPdf(List<Pager> pagers, PixelPaper pixelPaper, OutputStream outputStream) throws Exception {
+        PDFDocumentGraphics2D graphics2D = new PDFDocumentGraphics2D(false);
+        GraphicContext context = new GraphicContext();
+        graphics2D.setGraphicContext(context);
+        initGraphics2D(graphics2D);
+        PDFDocumentGraphics2DConfigurator configurator = new PDFDocumentGraphics2DConfigurator();
+        Configuration configuration = new DefaultConfiguration("default");
+        configurator.configure(graphics2D, configuration, false);
+        graphics2D.setupDocument(outputStream, pixelPaper.getWidth(), pixelPaper.getHeight());
+        pagers.get(0).setOrientation(2);
+        for (Pager pager : pagers) {
+            // TODO: 18-3-14 旋转错误,不能只旋转一页
+            if (pager.getOrientation() != 0) {
+                AffineTransform affineTransform = new AffineTransform();
+                affineTransform.rotate(pager.getOrientation() * (Math.PI / 2), pixelPaper.getWidth() / 2D, pixelPaper.getHeight() / 2D);
+                graphics2D.setTransform(affineTransform);
+            }
+            for (Layer layer : pager.getLayers()) {
+                layer.draw((Graphics2D) graphics2D.create());
+            }
+            graphics2D.nextPage(pixelPaper.getWidth(), pixelPaper.getHeight());
+        }
+        graphics2D.finish();
+        graphics2D.dispose();
     }
 
     public static List<String> graphicsToSvg(List<Pager> pagers) {
         DOMImplementation domImpl =
                 GenericDOMImplementation.getDOMImplementation();
+
         return pagers.stream().map(pager -> {
-            // Create an instance of org.w3c.dom.Document.
             String svgNS = "http://www.w3.org/2000/svg";
             Document document = domImpl.createDocument(svgNS, "svg", null);
-            document.createAttribute("style").setValue("width:220mm;height:220mm");
-
             SVGGraphics2D svgGraphics2D = new SVGGraphics2D(document);
-            initGraphics2D(svgGraphics2D);
+            // TODO: 18-3-14 旋转无效
+            if (pager.getOrientation() != 0) {
+                AffineTransform affineTransform = new AffineTransform();
+                affineTransform.rotate(pager.getOrientation() * (Math.PI / 2), 800 / 2D, 500 / 2D);
+                svgGraphics2D.setTransform(affineTransform);
+            }
             pager.getLayers().forEach(layer -> layer.draw(svgGraphics2D));
             StringWriter writer = new StringWriter();
-
             try {
                 svgGraphics2D.stream(writer);
             } catch (SVGGraphics2DIOException e) {
@@ -87,9 +109,17 @@ public class PrinterUtils {
         Graphics2D g2 = ((Graphics2D) image.getGraphics());
         initGraphics2D(g2);
         for (Pager pager : pagers) {
+            pager.setOrientation(3);
             BufferedImage preview = new BufferedImage(pixelPaper.getWidth(), pixelPaper.getHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics2D = ((Graphics2D) preview.getGraphics());
             initGraphics2D(graphics2D);
+            // TODO: 18-3-14 优化旋转，当前存在问题: 90度或者270度选择时,位置不对
+            if (pager.getOrientation() != 0) {
+                AffineTransform affineTransform = new AffineTransform();
+                affineTransform.rotate(pager.getOrientation() * (Math.PI / 2), pixelPaper.getWidth() / 2D, pixelPaper.getHeight() / 2D);
+                graphics2D.setTransform(affineTransform);
+            }
+
             graphics2D.setBackground(Color.white);
             graphics2D.setColor(Color.white);
             graphics2D.fillRect(0, 0, pixelPaper.getWidth(), pixelPaper.getHeight());

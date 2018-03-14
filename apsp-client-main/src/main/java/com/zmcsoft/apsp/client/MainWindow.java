@@ -95,7 +95,8 @@ public class MainWindow extends Application {
         engine.setOnError(event -> {
             log.error(event.getMessage(), event);
         });
-        engine.load(MainWindow.class.getResource("/ui/index.html").toString());
+//        engine.load(MainWindow.class.getResource("/ui/index.html").toString());
+        engine.load("http://localhost/html/form.html");
         root.getChildren().add(webView);
         primaryStage.setOnCloseRequest(event -> {
             Global.executorService.execute(() -> {
