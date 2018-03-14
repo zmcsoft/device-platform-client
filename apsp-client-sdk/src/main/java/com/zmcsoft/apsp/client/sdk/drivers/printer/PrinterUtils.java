@@ -60,7 +60,7 @@ public class PrinterUtils {
         Configuration configuration = new DefaultConfiguration("default");
         configurator.configure(graphics2D, configuration, false);
         graphics2D.setupDocument(outputStream, pixelPaper.getWidth(), pixelPaper.getHeight());
-        pagers.get(0).setOrientation(2);
+//        pagers.get(0).setOrientation(2);
         for (Pager pager : pagers) {
             // TODO: 18-3-14 旋转错误,不能只旋转一页
             if (pager.getOrientation() != 0) {
@@ -109,7 +109,7 @@ public class PrinterUtils {
         Graphics2D g2 = ((Graphics2D) image.getGraphics());
         initGraphics2D(g2);
         for (Pager pager : pagers) {
-            pager.setOrientation(3);
+//            pager.setOrientation(3);
             BufferedImage preview = new BufferedImage(pixelPaper.getWidth(), pixelPaper.getHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics2D = ((Graphics2D) preview.getGraphics());
             initGraphics2D(graphics2D);
