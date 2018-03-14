@@ -52,17 +52,20 @@ public class PrinterUtils {
     }
 
     public static void graphicsToPdf(List<Pager> pagers, PixelPaper pixelPaper, OutputStream outputStream) throws Exception {
+
+
         PDFDocumentGraphics2D graphics2D = new PDFDocumentGraphics2D(false);
         GraphicContext context = new GraphicContext();
         graphics2D.setGraphicContext(context);
         initGraphics2D(graphics2D);
+
         PDFDocumentGraphics2DConfigurator configurator = new PDFDocumentGraphics2DConfigurator();
-        Configuration configuration = new DefaultConfiguration("default");
+        Configuration configuration = new DefaultConfiguration("cfg");
         configurator.configure(graphics2D, configuration, false);
+
         graphics2D.setupDocument(outputStream, pixelPaper.getWidth(), pixelPaper.getHeight());
-//        pagers.get(0).setOrientation(2);
         for (Pager pager : pagers) {
-            // TODO: 18-3-14 旋转错误,不能只旋转一页
+            // TODO: 18-3-14 旋转错误,不能只旋转一页,无法使用中文字体
             if (pager.getOrientation() != 0) {
                 AffineTransform affineTransform = new AffineTransform();
                 affineTransform.rotate(pager.getOrientation() * (Math.PI / 2), pixelPaper.getWidth() / 2D, pixelPaper.getHeight() / 2D);
