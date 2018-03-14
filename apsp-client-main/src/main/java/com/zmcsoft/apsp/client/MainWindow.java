@@ -9,6 +9,7 @@ import com.zmcsoft.apsp.client.javascript.drivers.DeviceDriversWrapper;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
@@ -18,6 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebErrorEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -74,6 +76,7 @@ public class MainWindow extends Application {
         webView.setFontSmoothingType(FontSmoothingType.LCD);
         final WebEngine engine = webView.getEngine();
 
+        webView.setCache(false);
         engine.setUserDataDirectory(new File("./data/browser"));
         engine.getLoadWorker().stateProperty()
                 .addListener((observable, oldValue, newValue) -> {
@@ -96,7 +99,7 @@ public class MainWindow extends Application {
             log.error(event.getMessage(), event);
         });
 //        engine.load(MainWindow.class.getResource("/ui/index.html").toString());
-        engine.load("http://localhost/html/form.html");
+        engine.load("http://localhost:8080/device/fillbill/index.html");
         root.getChildren().add(webView);
         primaryStage.setOnCloseRequest(event -> {
             Global.executorService.execute(() -> {
@@ -123,7 +126,7 @@ public class MainWindow extends Application {
             primaryStage.setFullScreen(true);
 
             webView.setContextMenuEnabled(false);
-            //webView.getEngine().setUserAgent("");
+            webView.getEngine().setUserAgent("apsp-client");
             primaryStage.show();
         }
         primaryStage.setAlwaysOnTop(true);

@@ -3,16 +3,16 @@ package com.zmcsoft.apsp.client.sdk.drivers.printer;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.batik.dom.GenericDOMImplementation;
-import org.apache.batik.svggen.SVGConverter;
+import org.apache.batik.ext.awt.RenderingHintsKeyExt;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
-import org.apache.batik.transcoder.*;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.XMLAbstractTranscoder;
 import org.apache.batik.transcoder.image.ImageTranscoder;
-import org.apache.batik.transcoder.image.PNGTranscoder;
-import org.apache.fop.fonts.FontInfo;
 import org.apache.fop.svg.PDFDocumentGraphics2D;
 import org.apache.fop.svg.PDFDocumentGraphics2DConfigurator;
-import org.apache.fop.svg.PDFGraphics2D;
 import org.apache.fop.svg.PDFTranscoder;
 import org.apache.xmlgraphics.java2d.GraphicContext;
 import org.w3c.dom.DOMImplementation;
@@ -21,8 +21,6 @@ import org.w3c.dom.Document;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -51,19 +49,34 @@ public class PrinterUtils {
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     }
 
+    public static void svg2pdf(List<String> svg, OutputStream out) throws Exception {
+        TranscoderOutput output = new TranscoderOutput(out);
+        PDFPrinter transcoder = new PDFPrinter(svg);
+        transcoder.addTranscodingHint(KEY_WIDTH, 800f);
+        transcoder.addTranscodingHint(KEY_HEIGHT, 1200f);
+        transcoder.addTranscodingHint(KEY_AUTO_FONTS, true);
+        final int dpi = 300;
+        transcoder.addTranscodingHint(ImageTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, 25.4f / dpi);
+        transcoder.addTranscodingHint(XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING, Boolean.FALSE);
+        transcoder.addTranscodingHint(PDFTranscoder.KEY_STROKE_TEXT, Boolean.FALSE);
+        transcoder.transcode(output);
+    }
+
     public static void graphicsToPdf(List<Pager> pagers, PixelPaper pixelPaper, OutputStream outputStream) throws Exception {
-
-
         PDFDocumentGraphics2D graphics2D = new PDFDocumentGraphics2D(false);
         GraphicContext context = new GraphicContext();
         graphics2D.setGraphicContext(context);
         initGraphics2D(graphics2D);
-
         PDFDocumentGraphics2DConfigurator configurator = new PDFDocumentGraphics2DConfigurator();
         Configuration configuration = new DefaultConfiguration("cfg");
         configurator.configure(graphics2D, configuration, false);
 
         graphics2D.setupDocument(outputStream, pixelPaper.getWidth(), pixelPaper.getHeight());
+        graphics2D.setupDefaultFontInfo();
+        graphics2D.setRenderingHint(
+                RenderingHintsKeyExt.KEY_TRANSCODING,
+                RenderingHintsKeyExt.VALUE_TRANSCODING_VECTOR);
+        graphics2D.setFont(Font.getFont("YaHei Consolas Hybrid"));
         for (Pager pager : pagers) {
             // TODO: 18-3-14 旋转错误,不能只旋转一页,无法使用中文字体
             if (pager.getOrientation() != 0) {
